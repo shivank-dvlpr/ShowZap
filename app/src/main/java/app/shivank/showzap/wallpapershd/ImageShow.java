@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
@@ -187,7 +188,14 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 break;
 
             case R.id.fab_fav:
-                FancyToast.makeText(ImageShow.this, "In Development!", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
+                Databasehandler databasehandler = new Databasehandler(this);
+                //databasehandler.insertImage(bundle);
+                if (databasehandler.insertImage(bundle)){
+                    Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(this, "Not Successful", Toast.LENGTH_SHORT).show();
+                }
+                //FancyToast.makeText(ImageShow.this, "In Development!", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
                 //Create Loop
                 //sendData = "fav";
 
@@ -196,6 +204,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
 
     }
+
 
     @Override
     public void onBackPressed() {

@@ -4,8 +4,8 @@ package app.shivank.showzap.wallpapershd;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +33,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
 
@@ -201,16 +199,18 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 break;
 
             case R.id.bottom_nav_fav:
-                FancyToast.makeText(getContext(), "In Development!", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
-              /*  MainActivity.DRAWER_VALUES = 20;
+
+                //FancyToast.makeText(getContext(), "In Development!", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
+                MainActivity.DRAWER_VALUES = 20;
                 bottomNavigationView.getMenu().setGroupCheckable(0, true, true);
-                ReturnView();*/
+                ReturnView();
                 break;
 
         }
 
         return true;
     }
+
 
     private View ReturnView() {
 
@@ -1155,14 +1155,15 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             });
 
         } else if (MainActivity.DRAWER_VALUES == 20) {
-            if (ImageShow.sendData == "fav") {
 
-                ImageShow imageShow = new ImageShow();
+            ImageShow imageShow = new ImageShow();
 
-                gridAdapter = new GridAdapter(getContext(), imageShow.stringArrayList);
-                gridAdapter.notifyDataSetChanged();
-                gridView.setAdapter(gridAdapter);
-            }
+            Log.d("StoreData", getResult().toString());
+
+            gridAdapter = new GridAdapter(getContext(), getResult());
+            gridAdapter.notifyDataSetChanged();
+            gridView.setAdapter(gridAdapter);
+
            /* ImageShow imageShow = new ImageShow();
             for (int i = 0; i < imageShow.stringArrayList.size(); i++) {
                 ImageShow.favData = String.valueOf(imageShow.stringArrayList.get(i));
@@ -1183,6 +1184,24 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             });
         }
         return view;
+    }
+
+    private ArrayList<String> getResult() {
+
+        Databasehandler db = new Databasehandler(getContext());
+
+
+        ArrayList<String> list = new ArrayList<String>();
+
+        Cursor c = db.allData();
+        while (c.moveToNext()) {
+            String data = c.getString(0);
+            list.add(data);
+        }
+        c.close();
+
+        db.close();
+        return list;
     }
 
 

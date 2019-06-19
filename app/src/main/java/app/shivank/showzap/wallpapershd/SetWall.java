@@ -19,8 +19,6 @@ public class SetWall extends AppCompatActivity {
         setContentView(R.layout.activity_setwall);
         getSupportActionBar().hide();
 
-        //Workflow
-
         setWallActivity = this;
     }
 }
