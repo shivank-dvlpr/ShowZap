@@ -190,11 +190,13 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
             case R.id.fab_fav:
                 Databasehandler databasehandler = new Databasehandler(this);
                 //databasehandler.insertImage(bundle);
-                if (databasehandler.insertImage(bundle)){
+                databasehandler.insertImage(bundle);
+              /*  if (databasehandler.insertImage(bundle)){
                     Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
+                    //Log.d("ImageBunde",)
                 }else {
                     Toast.makeText(this, "Not Successful", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 //FancyToast.makeText(ImageShow.this, "In Development!", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
                 //Create Loop
                 //sendData = "fav";

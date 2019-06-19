@@ -1158,8 +1158,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
             ImageShow imageShow = new ImageShow();
 
-            Log.d("StoreData", getResult().toString());
-
             gridAdapter = new GridAdapter(getContext(), getResult());
             gridAdapter.notifyDataSetChanged();
             gridView.setAdapter(gridAdapter);
@@ -1196,6 +1194,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         Cursor c = db.allData();
         while (c.moveToNext()) {
             String data = c.getString(0);
+            Log.d("DATADATA", data);
             list.add(data);
         }
         c.close();

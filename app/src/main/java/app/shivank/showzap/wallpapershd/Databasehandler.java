@@ -49,9 +49,7 @@ public class Databasehandler extends SQLiteOpenHelper {
        /* String SQL_CREATE_IMAGE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_NAME + " BLOB NOT NULL "
                 + " );";*/
 
-        db.execSQL("create table images(id integer primary key,img blob not null)");
-
-
+        db.execSQL("Create TABLE images( id INTEGER PRIMARY KEY, name TEXT)");
       /*  String CREATE_TABLE = "CREATE TABLE " + TABLE_DATA + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_IMG_URL + " TEXT,"
                 + KEY_IS_FAVOURITE + " INTEGER" + ")";
@@ -70,11 +68,17 @@ public class Databasehandler extends SQLiteOpenHelper {
         byte[] imgByte = new byte[fs.available()];
         fs.read(imgByte);*/
        ContentValues contentValues = new ContentValues();
-       contentValues.put("img", image);
-       database.insert("images", null, contentValues);
+       String ll = "insert into " + "images" + " values(null, '"+ image+"')";
+       database.execSQL(ll);
+       database.close();
+      /* contentValues.put("name", image);
+       database.insert("images", null, contentValues);*/
+       //Log.d("InsertImage", allData() + "");
        //fs.close();
        return true;
    }
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -82,12 +86,13 @@ public class Databasehandler extends SQLiteOpenHelper {
         //db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("drop table if exists images");
         // Create tables again
-        //onCreate(db);
+        onCreate(db);
     }
 
     public Cursor allData(){
        SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("select * from images", null);
+       Cursor cursor = db.rawQuery("select * from images", null);
+       return cursor;
     }
 
 }
