@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "651806508513",
+    "firebase_url": "https://showzap-380f2.firebaseio.com",
+    "project_id": "showzap-380f2",
+    "storage_bucket": "showzap-380f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651806508513:android:e67f6dba14a8dee1",
+        "android_client_info": {
+          "package_name": "app.shivank.showzap.wallpapershd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651806508513-qcc0oft8kv2bi1723e9n2ua1tjsarras.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.shivank.showzap.wallpapershd",
+            "certificate_hash": "b77331970be08b545ccfa211201b684ea45d599e"
+          }
+        },
+        {
+          "client_id": "651806508513-9t473usi0ud1to4iv3uugiumi173l0ae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFD5KQXi7vp4gQAs1_4suSK-Bc1R2Bxos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651806508513-9t473usi0ud1to4iv3uugiumi173l0ae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
