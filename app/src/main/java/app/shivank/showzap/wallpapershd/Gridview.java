@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,12 +20,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
@@ -34,7 +38,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -1173,8 +1181,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                     Intent intent = new Intent(getActivity(), ImageShow.class);
 
                     ImageShow imageShow = new ImageShow();
-                    for (String i : imageShow.stringArrayList) {
-                        model = new Model(imageShow.stringArrayList.get(position));
+                    for (String i : getResult()) {
+                        model = new Model(getResult().get(position));
                         intent.putExtra("KEY", model.strings);
                     }
                     startActivity(intent);
@@ -1193,9 +1201,12 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         Cursor c = db.allData();
         while (c.moveToNext()) {
-            String data = c.getString(0);
-            Log.d("DATADATA", data);
+
+            String data = c.getString(1);
+            Log.d("DATADATA", data + "");
+
             list.add(data);
+
         }
         c.close();
 

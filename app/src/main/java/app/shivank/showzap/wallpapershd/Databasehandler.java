@@ -68,6 +68,7 @@ public class Databasehandler extends SQLiteOpenHelper {
         byte[] imgByte = new byte[fs.available()];
         fs.read(imgByte);*/
        ContentValues contentValues = new ContentValues();
+       //database.execSQL("delete from "+ "images"); // delete all data from database at once
        String ll = "insert into " + "images" + " values(null, '"+ image+"')";
        database.execSQL(ll);
        database.close();
@@ -93,6 +94,31 @@ public class Databasehandler extends SQLiteOpenHelper {
        SQLiteDatabase db = this.getWritableDatabase();
        Cursor cursor = db.rawQuery("select * from images", null);
        return cursor;
+    }
+
+    public void deleteFav(int id){
+
+       SQLiteDatabase db = this.getWritableDatabase();
+       db.execSQL("delete from " + "images" + " where " + "id" + " = " + id);
+       db.close();
+
+    }
+    public int getItemIdByPosition(int position) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int itemID = 0;
+        Cursor localCursor = db.rawQuery("select * from " + "images",
+                null);
+        int i = localCursor.getColumnIndex("id");
+        if (localCursor.moveToFirst()) {
+
+            do {
+
+                itemID = Integer.parseInt(localCursor.getString(i));
+            } while (localCursor.moveToPosition(position));
+        }
+        localCursor.close();
+        return itemID;
     }
 
 }

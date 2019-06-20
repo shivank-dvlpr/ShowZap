@@ -4,16 +4,11 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -22,12 +17,16 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
 
@@ -74,6 +73,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
     Intent intent;
 
+    int idKey;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +99,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         stringArrayList = new ArrayList<>();
         aa = new ArrayList<>();
 
+
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.floating_action_menu);
         fab_download = findViewById(R.id.fab_download);
         fab_set_wallpaper = findViewById(R.id.fab_set_wallpaper);
@@ -105,6 +107,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         fab_download.setOnClickListener(this);
         fab_set_wallpaper.setOnClickListener(this);
         fab_fav.setOnClickListener(this);
+
 
         intent = getIntent();
 
@@ -116,6 +119,12 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
             Log.d("ImageShowNull", e.getLocalizedMessage() + "");
         }
 
+        Databasehandler databasehandler = new Databasehandler(this);
+
+        checkImageInDB();
+
+        //checkImageInDB();
+
         CircularProgressDrawable progressDrawable = new CircularProgressDrawable(ImageShow.this);
         progressDrawable.setStrokeWidth(5f);
         progressDrawable.setCenterRadius(30f);
@@ -126,6 +135,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 .load(bundle)
                 .placeholder(progressDrawable)
                 .into(img11);
+
 
     }
 
@@ -189,8 +199,34 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
             case R.id.fab_fav:
                 Databasehandler databasehandler = new Databasehandler(this);
+
+                Cursor c = databasehandler.allData();
+
+                while (c.moveToNext()){
+                    idKey = c.getPosition();
+                }
+
+                if (fab_fav.getLabelText() == "Remove from Fav.") {
+                    databasehandler.deleteFav(idKey);
+                } else {
+                    databasehandler.insertImage(bundle);
+                }
+
+                /*Cursor c = databasehandler.allData();
+                while (c.moveToNext()) {
+                    String a = c.getString(1);
+
+                    if (!(a.contains(bundle))) {
+
+                    } else {
+                        Toast.makeText(this, "Already in Fav.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }*/
+
+
                 //databasehandler.insertImage(bundle);
-                databasehandler.insertImage(bundle);
+
               /*  if (databasehandler.insertImage(bundle)){
                     Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
                     //Log.d("ImageBunde",)
@@ -212,6 +248,21 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
     public void onBackPressed() {
         super.onBackPressed();
         this.overridePendingTransition(R.anim.animate_opening_intent, R.anim.animate_exit_intent);
+    }
+
+    private void checkImageInDB() {
+        Databasehandler databasehandler = new Databasehandler(this);
+
+        Cursor c = databasehandler.allData();
+        while (c.moveToNext()) {
+            String a = c.getString(1);
+
+            if ((a.contains(bundle))) {
+                //Toast.makeText(this, "Already in Fav.", Toast.LENGTH_SHORT).show();
+                //fab_fav.setVisibility(View.GONE);
+                fab_fav.setLabelText("Remove from Fav.");
+            }
+        }
     }
 
 }
