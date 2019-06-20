@@ -17,7 +17,7 @@ public class Databasehandler extends SQLiteOpenHelper {
     // All Static variables
 // Database Version
     private static final int DATABASE_VERSION = 1;
-    SQLiteDatabase db;
+    static SQLiteDatabase db;
 
     // Database Name
     private static final String DATABASE_NAME = "dataManager";
@@ -36,6 +36,7 @@ public class Databasehandler extends SQLiteOpenHelper {
     public Databasehandler(Context context) {
         super(context, "imageDb.db", null, 1);
 
+        db = this.getWritableDatabase();
         //mContentResolver = context.getContentResolver();
 
        // db = this.getWritableDatabase();
@@ -96,10 +97,15 @@ public class Databasehandler extends SQLiteOpenHelper {
        return cursor;
     }
 
-    public void deleteFav(int id){
+    public void deleteFav(String  id){
+
+       String where = "name=?";
 
        SQLiteDatabase db = this.getWritableDatabase();
-       db.execSQL("delete from " + "images" + " where " + "id" + " = " + id);
+       db.delete("images",  where, new String[]{id});
+
+      /* SQLiteDatabase db = this.getWritableDatabase();
+       db.execSQL("delete from " + "images" + " where " + "id" + " = " + id +"");*/
        db.close();
 
     }
@@ -119,6 +125,18 @@ public class Databasehandler extends SQLiteOpenHelper {
         }
         localCursor.close();
         return itemID;
+    }
+
+    public void delete(int id){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Cursor cursor = db.rawQuery("SELECT id FROM images WHERE id='"+id+"'",null);
+
+        db.execSQL("delete from" + " images" + " where id="+id);
+
+        db.close();
+        //db.delete("images","id=?", new String[]{id});
     }
 
 }

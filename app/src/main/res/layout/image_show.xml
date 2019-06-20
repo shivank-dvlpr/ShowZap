@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_colorPressed="#76FF03"
-            android:src="@drawable/fav_nav_bottom"
+            android:src="@drawable/not_fav"
             fab:fab_colorNormal="#FFEA00"
             fab:fab_label="Favourite"
             fab:fab_size="mini" />

@@ -27,6 +27,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -200,17 +201,37 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
             case R.id.fab_fav:
                 Databasehandler databasehandler = new Databasehandler(this);
 
-                Cursor c = databasehandler.allData();
+                //Cursor c = databasehandler.allData();
+                Cursor c = Databasehandler.db.rawQuery("SELECT *," + "images" + ".rowid AS rowID" + " FROM " + "images", null);
+                // Cursor c = Databasehandler.db.rawQuery("SELECT *," + "images" + " FROM " + "images" + " WHERE name='" +bundle+"'" , null);
+                //idKey = c.getColumnIndex(String.valueOf(GridAdapter.position));
+                //Cursor cursor = Databasehandler.db.rawQuery("SELECT id FROM images WHERE id='"+bundle+"'",null);
 
-                while (c.moveToNext()){
-                    idKey = c.getPosition();
-                }
+
+                //idKey = c.getColumnIndex("_id");
+
+                /*while (c.moveToNext()) {
+                    idKey = c.getInt(c.getColumnIndexOrThrow(bundle));
+                }*/
+                Log.d("IDKEY", idKey + "");
 
                 if (fab_fav.getLabelText() == "Remove from Fav.") {
-                    databasehandler.deleteFav(idKey);
+                    //databasehandler.deleteFav(idKey);
+                    databasehandler.deleteFav(bundle);
+
+                    this.finish();
                 } else {
                     databasehandler.insertImage(bundle);
+                    fab_fav.setLabelText("Remove from Fav.");
+                    fab_fav.setImageResource(R.drawable.fav_nav_bottom);
+                    View snackBar = findViewById(R.id.layout_rel);
+                    Snackbar.make(snackBar, "Added to Favourites!", Snackbar.LENGTH_SHORT).show();
                 }
+
+
+                c.close();
+
+
 
                 /*Cursor c = databasehandler.allData();
                 while (c.moveToNext()) {
@@ -261,9 +282,11 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 //Toast.makeText(this, "Already in Fav.", Toast.LENGTH_SHORT).show();
                 //fab_fav.setVisibility(View.GONE);
                 fab_fav.setLabelText("Remove from Fav.");
+                fab_fav.setImageResource(R.drawable.fav_nav_bottom);
             }
         }
     }
+
 
 }
 

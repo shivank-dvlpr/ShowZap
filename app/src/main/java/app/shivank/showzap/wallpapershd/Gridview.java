@@ -76,6 +76,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         // Required empty public constructor
     }
 
+
     @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -208,6 +209,11 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
             case R.id.bottom_nav_fav:
 
+                try {
+                    (MainActivity.navigationView.getCheckedItem()).setChecked(false);
+                } catch (NullPointerException e) {
+                    Log.i("NAVIGATION_VIEW", e.getLocalizedMessage() + "");
+                }
                 //FancyToast.makeText(getContext(), "In Development!", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
                 MainActivity.DRAWER_VALUES = 20;
                 bottomNavigationView.getMenu().setGroupCheckable(0, true, true);
@@ -218,6 +224,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         return true;
     }
+
+
 
 
     private View ReturnView() {
@@ -1164,6 +1172,11 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         } else if (MainActivity.DRAWER_VALUES == 20) {
 
+            MainActivity.toolbar.setTitle("Favourites");
+
+            changeUIColors("#000000","#000000", "#FF0000", "#FF0000", "#FF0000",
+                    "#FF0000", R.drawable.ic_up_white, R.drawable.ic_down_white, "#000000");
+
             ImageShow imageShow = new ImageShow();
 
             gridAdapter = new GridAdapter(getContext(), getResult());
@@ -1203,7 +1216,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         while (c.moveToNext()) {
 
             String data = c.getString(1);
-            Log.d("DATADATA", data + "");
+            //Log.d("DATADATA", data + "");
 
             list.add(data);
 
@@ -1305,6 +1318,10 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         MainActivity.navigationView.setItemTextColor(navMenuTextList);
         MainActivity.navigationView.setItemIconTintList(navMenuIconList);
+    }
+
+    public void ref(){
+        gridAdapter.notifyDataSetChanged();
     }
 
 }
