@@ -1,6 +1,7 @@
 package app.shivank.showzap.wallpapershd;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,10 +12,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -91,6 +96,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
         setContentView(R.layout.image_show);
 
+
         fav_images = new ArrayList<>();
 
         getSupportActionBar().hide();
@@ -125,6 +131,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         checkImageInDB();
 
         //checkImageInDB();
+
+
 
         CircularProgressDrawable progressDrawable = new CircularProgressDrawable(ImageShow.this);
         progressDrawable.setStrokeWidth(5f);
@@ -202,7 +210,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 Databasehandler databasehandler = new Databasehandler(this);
 
                 //Cursor c = databasehandler.allData();
-                Cursor c = Databasehandler.db.rawQuery("SELECT *," + "images" + ".rowid AS rowID" + " FROM " + "images", null);
+                //Cursor c = Databasehandler.db.rawQuery("SELECT *," + "images" + ".rowid AS rowID" + " FROM " + "images", null);
                 // Cursor c = Databasehandler.db.rawQuery("SELECT *," + "images" + " FROM " + "images" + " WHERE name='" +bundle+"'" , null);
                 //idKey = c.getColumnIndex(String.valueOf(GridAdapter.position));
                 //Cursor cursor = Databasehandler.db.rawQuery("SELECT id FROM images WHERE id='"+bundle+"'",null);
@@ -213,13 +221,16 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 /*while (c.moveToNext()) {
                     idKey = c.getInt(c.getColumnIndexOrThrow(bundle));
                 }*/
-                Log.d("IDKEY", idKey + "");
+                //Log.d("IDKEY", idKey + "");
 
                 if (fab_fav.getLabelText() == "Remove from Fav.") {
-                    //databasehandler.deleteFav(idKey);
                     databasehandler.deleteFav(bundle);
-
-                    this.finish();
+                    MainActivity.DRAWER_VALUES = 50;
+                    fab_fav.setLabelText("Favourite");
+                    fab_fav.setImageResource(R.drawable.not_fav);
+                    View snackBar = findViewById(R.id.layout_rel);
+                    Snackbar.make(snackBar, "Removed from Favourites.", Snackbar.LENGTH_SHORT).show();
+                    //this.finish();
                 } else {
                     databasehandler.insertImage(bundle);
                     fab_fav.setLabelText("Remove from Fav.");
@@ -227,11 +238,6 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                     View snackBar = findViewById(R.id.layout_rel);
                     Snackbar.make(snackBar, "Added to Favourites!", Snackbar.LENGTH_SHORT).show();
                 }
-
-
-                c.close();
-
-
 
                 /*Cursor c = databasehandler.allData();
                 while (c.moveToNext()) {

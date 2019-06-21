@@ -109,23 +109,7 @@ public class Databasehandler extends SQLiteOpenHelper {
        db.close();
 
     }
-    public int getItemIdByPosition(int position) {
-        SQLiteDatabase db = this.getWritableDatabase();
 
-        int itemID = 0;
-        Cursor localCursor = db.rawQuery("select * from " + "images",
-                null);
-        int i = localCursor.getColumnIndex("id");
-        if (localCursor.moveToFirst()) {
-
-            do {
-
-                itemID = Integer.parseInt(localCursor.getString(i));
-            } while (localCursor.moveToPosition(position));
-        }
-        localCursor.close();
-        return itemID;
-    }
 
     public void delete(int id){
 

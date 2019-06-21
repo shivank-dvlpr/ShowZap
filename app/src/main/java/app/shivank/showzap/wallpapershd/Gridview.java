@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,14 +18,12 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
@@ -38,11 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 /**
@@ -71,6 +63,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     ArrayList<String> fav = new ArrayList<>();
     LinearLayout downloadWallLayout;
     LinearLayout setWallLayout;
+    MenuItem menuItem1;
 
     public Gridview() {
         // Required empty public constructor
@@ -87,6 +80,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         final LayoutInflater layoutInflater = getLayoutInflater();
         final View v = layoutInflater.inflate(R.layout.nav_header, null);
         navHeaderImage = v.findViewById(R.id.nav_header_image);
+
+        menuItem1 = getActivity().findViewById(R.id.bottom_nav_fav);
 
 
         navigatin_drawer_header = MainActivity.navigationView.getHeaderView(0);
@@ -119,6 +114,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.keepSynced(true);
+
 
         return ReturnView();
 
@@ -217,6 +213,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 //FancyToast.makeText(getContext(), "In Development!", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
                 MainActivity.DRAWER_VALUES = 20;
                 bottomNavigationView.getMenu().setGroupCheckable(0, true, true);
+
                 ReturnView();
                 break;
 
@@ -225,10 +222,13 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         return true;
     }
 
+    public void menu() {
+        //menuItem1 = (MenuItem) view.findViewById(R.id.bottom_nav_fav);
+        ((View) menuItem1).performClick();
+    }
 
 
-
-    private View ReturnView() {
+    public View ReturnView() {
 
         if (MainActivity.DRAWER_VALUES == 0) { // Opening Activity
 
@@ -1174,7 +1174,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
             MainActivity.toolbar.setTitle("Favourites");
 
-            changeUIColors("#000000","#000000", "#FF0000", "#FF0000", "#FF0000",
+            changeUIColors("#000000", "#000000", "#FF0000", "#FF0000", "#FF0000",
                     "#FF0000", R.drawable.ic_up_white, R.drawable.ic_down_white, "#000000");
 
             ImageShow imageShow = new ImageShow();
@@ -1205,7 +1205,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         return view;
     }
 
-    private ArrayList<String> getResult() {
+    public ArrayList<String> getResult() {
 
         Databasehandler db = new Databasehandler(getContext());
 
@@ -1320,8 +1320,19 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         MainActivity.navigationView.setItemIconTintList(navMenuIconList);
     }
 
-    public void ref(){
-        gridAdapter.notifyDataSetChanged();
-    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MainActivity.DRAWER_VALUES == 50) {
+            //MenuItem m1 = (MenuItem) getActivity().findViewById(R.id.bottom_nav_fav);
+            MenuItem m = bottomNavigationView.getMenu().getItem(2);
+            if (m.isChecked()) {
+                gridAdapter = new GridAdapter(getContext(), getResult());
+                gridAdapter.notifyDataSetChanged();
+                gridView.setAdapter(gridAdapter);
+            }
+        }
+
+    }
 }
