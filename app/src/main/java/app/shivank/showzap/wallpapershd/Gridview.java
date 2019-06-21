@@ -1,13 +1,24 @@
 package app.shivank.showzap.wallpapershd;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,12 +29,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
@@ -34,6 +47,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -63,7 +77,13 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     ArrayList<String> fav = new ArrayList<>();
     LinearLayout downloadWallLayout;
     LinearLayout setWallLayout;
-    MenuItem menuItem1;
+    private int MY_CAMERA_PERMISSION_CODE = 1000;
+    private int CAMERA_REQUEST = 2000;
+    private int PICK_IMAGE = 111;
+    Uri avatarData;
+    SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences1;
+    int code;
 
     public Gridview() {
         // Required empty public constructor
@@ -75,26 +95,63 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         view = inflater.inflate(R.layout.fragment_gridview, container, false);
 
         final LayoutInflater layoutInflater = getLayoutInflater();
         final View v = layoutInflater.inflate(R.layout.nav_header, null);
         navHeaderImage = v.findViewById(R.id.nav_header_image);
 
-        menuItem1 = getActivity().findViewById(R.id.bottom_nav_fav);
-
-
         navigatin_drawer_header = MainActivity.navigationView.getHeaderView(0);
         navHeaderImage = navigatin_drawer_header.findViewById(R.id.nav_header_image);
         navHeaderImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext(), R.style.CustomDialog);
+                String[] items = {"Take Picture", "Choose Image"};
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                dialog.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (which == 0) {
+                            code = 1;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                                } else {
+                                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                                }
+                            } else {
+                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                            }
+                        } else {
+                            code = 2;
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                        }
+                    }
+                }).create().show();
+
+               /* if (!(savedInstanceState == null)) {
+                    avatarData = savedInstanceState.getParcelable("uri");
+                    Glide.with(getContext())
+                            .load(avatarData)
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(navHeaderImage);
+                }*/
+
+
+
+               /* AlertDialog.Builder alert = new AlertDialog.Builder(getContext(), R.style.CustomDialog);
                 alert.setTitle("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "  " + "About");
                 alert.setMessage("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "  " + "ShowZap\n" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t"
                         + "\t" + "\t" + "\t" + "\t" + "\t" + "  " + " " + "V." + BuildConfig.VERSION_NAME +
                         "\n" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "Develop by Shivank Yadav");
-                alert.setCancelable(true).show();
+                alert.setCancelable(true).show();*/
             }
         });
 
@@ -116,10 +173,133 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         databaseReference.keepSynced(true);
 
 
+        sharedPreferences = getActivity().getSharedPreferences("SH", 0);
+        String i = sharedPreferences.getString("image", null);
+        if (i != null){
+            Uri l = Uri.parse(i);
+            Glide.with(getContext())
+                    .load(l)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(navHeaderImage);
+
+        }
+
+
         return ReturnView();
 
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+
+        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            } else {
+                Toast.makeText(getContext(), "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            avatarData = data.getData();
+            //navHeaderImage.setImageBitmap(photo);
+            Glide.with(getContext())
+                    .load(photo)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(navHeaderImage);
+
+            File sdcard = Environment.getExternalStorageDirectory();
+            File directory = new File(sdcard.getAbsoluteFile() + "/ShowZap");
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+
+            String fileName = System.currentTimeMillis() + ".jpg";
+            File outFile = new File(directory, fileName);
+
+            Uri outputFileUri = Uri.fromFile(outFile);
+
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE );
+            intent.putExtra( MediaStore.EXTRA_OUTPUT, outputFileUri );
+
+
+            //code = 1;
+            sharedPreferences = getActivity().getSharedPreferences("SH", 0);
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            edit.putString("image", String.valueOf(avatarData));
+            edit.commit();
+
+        } else if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+            // Bitmap photo = (Bitmap) data.getExtras().get("data");
+            avatarData = data.getData();
+
+            //code = 2;
+            //navHeaderImage.setImageBitmap(photo);
+            Glide.with(getContext())
+                    .load(avatarData)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(navHeaderImage);
+
+            sharedPreferences = getActivity().getSharedPreferences("SH", 0);
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            edit.putString("image", String.valueOf(avatarData));
+            edit.commit();
+
+
+        }
+
+    }
+
+    /*@Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("uri", avatarData);
+
+    }*/
+
+   /* @Override
+    public void onPause() {
+        super.onPause();
+
+        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("image", String.valueOf(avatarData));
+        editor.commit();
+
+        sharedPreferences = getActivity().getSharedPreferences("SH", 0);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString("image", String.valueOf(avatarData));
+        edit.commit();
+
+    }
+*/
+
+  /*  @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (!(savedInstanceState == null)) {
+            avatarData = savedInstanceState.getParcelable("uri");
+            Glide.with(getContext())
+                    .load(avatarData)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(navHeaderImage);
+        }
+    }*/
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -204,7 +384,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 break;
 
             case R.id.bottom_nav_fav:
-
+                fabDown.setVisibility(View.INVISIBLE);
+                fabUp.setVisibility(View.INVISIBLE);
                 try {
                     (MainActivity.navigationView.getCheckedItem()).setChecked(false);
                 } catch (NullPointerException e) {
@@ -221,12 +402,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         return true;
     }
-
-    public void menu() {
-        //menuItem1 = (MenuItem) view.findViewById(R.id.bottom_nav_fav);
-        ((View) menuItem1).performClick();
-    }
-
 
     public View ReturnView() {
 
@@ -1105,9 +1280,10 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
             //MainActivity mainActivity = new MainActivity();
             MainActivity.toolbar.setTitle("Trend");
-            changeUIColors("#000000", "#000000", "#b0ff57", "#b0ff57"
-                    , "#000000", "#000000", R.drawable.ic_up_green, R.drawable.ic_down_green, "#000000");
-
+           /* changeUIColors("#000000", "#000000", "#b0ff57", "#b0ff57"
+                    , "#000000", "#000000", R.drawable.ic_up_green, R.drawable.ic_down_green, "#000000");*/
+            changeUIColors("#000000", "#000000", "#FFFF00", "#FFFF00"
+                    , "#000000", "#000000", R.drawable.ic_up_yellow, R.drawable.ic_down_yellow, "#000000");
             firebaseStorage = FirebaseStorage.getInstance();
 
             storageReference = firebaseStorage.getReference();
@@ -1174,8 +1350,10 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
             MainActivity.toolbar.setTitle("Favourites");
 
-            changeUIColors("#000000", "#000000", "#FF0000", "#FF0000", "#FF0000",
-                    "#FF0000", R.drawable.ic_up_white, R.drawable.ic_down_white, "#000000");
+            /*changeUIColors("#000000", "#000000", "#FF0000", "#FF0000", "#FF0000",
+                    "#FF0000", R.drawable.ic_up_white, R.drawable.ic_down_white, "#000000");*/
+            changeUIColors("#000000", "#000000", "#b0ff57", "#b0ff57"
+                    , "#000000", "#000000", R.drawable.ic_up_green, R.drawable.ic_down_green, "#000000");
 
             ImageShow imageShow = new ImageShow();
 
@@ -1227,12 +1405,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         return list;
     }
 
-
-  /*  private Bundle saveState() {
-        Bundle state = new Bundle();
-        state.putSerializable("Fav", ImageShow.favData);
-        return state;
-    }*/
 
     private void changeUIColors(String statusBarColor, String toolbarColor, String toolbarTextColor, String hamburgerColor
             , String fabUpBgColor, String fabDownBgColor, int fabUpImgSrc, int fabDownImgSrc, String nav_header_color) {
