@@ -1,24 +1,18 @@
 package app.shivank.showzap.wallpapershd;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,7 +23,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +41,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
 import java.util.ArrayList;
 
 
@@ -84,6 +77,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     SharedPreferences sharedPreferences;
     SharedPreferences sharedPreferences1;
     int code;
+    TextView txtNoFav;
 
     public Gridview() {
         // Required empty public constructor
@@ -102,32 +96,21 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         final View v = layoutInflater.inflate(R.layout.nav_header, null);
         navHeaderImage = v.findViewById(R.id.nav_header_image);
 
+        txtNoFav = (TextView) view.findViewById(R.id.txtNoFav);
+
         navigatin_drawer_header = MainActivity.navigationView.getHeaderView(0);
         navHeaderImage = navigatin_drawer_header.findViewById(R.id.nav_header_image);
         navHeaderImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] items = {"Take Picture", "Choose Image"};
+
+                String[] items = {"Choose Image"};
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                 dialog.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                         if (which == 0) {
-                            code = 1;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                                } else {
-                                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                                }
-                            } else {
-                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                            }
-                        } else {
-                            code = 2;
                             Intent intent = new Intent();
                             intent.setType("image/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -135,23 +118,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                         }
                     }
                 }).create().show();
-
-               /* if (!(savedInstanceState == null)) {
-                    avatarData = savedInstanceState.getParcelable("uri");
-                    Glide.with(getContext())
-                            .load(avatarData)
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(navHeaderImage);
-                }*/
-
-
-
-               /* AlertDialog.Builder alert = new AlertDialog.Builder(getContext(), R.style.CustomDialog);
-                alert.setTitle("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "  " + "About");
-                alert.setMessage("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "  " + "ShowZap\n" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t"
-                        + "\t" + "\t" + "\t" + "\t" + "\t" + "  " + " " + "V." + BuildConfig.VERSION_NAME +
-                        "\n" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "Develop by Shivank Yadav");
-                alert.setCancelable(true).show();*/
             }
         });
 
@@ -175,7 +141,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         sharedPreferences = getActivity().getSharedPreferences("SH", 0);
         String i = sharedPreferences.getString("image", null);
-        if (i != null){
+
+        if (i != null) {
             Uri l = Uri.parse(i);
             Glide.with(getContext())
                     .load(l)
@@ -191,64 +158,12 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-
-        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getContext(), "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            } else {
-                Toast.makeText(getContext(), "camera permission denied", Toast.LENGTH_LONG).show();
-            }
-        }
-
-
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
 
-
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            avatarData = data.getData();
-            //navHeaderImage.setImageBitmap(photo);
-            Glide.with(getContext())
-                    .load(photo)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(navHeaderImage);
-
-            File sdcard = Environment.getExternalStorageDirectory();
-            File directory = new File(sdcard.getAbsoluteFile() + "/ShowZap");
-            if (!directory.exists()) {
-                directory.mkdir();
-            }
-
-            String fileName = System.currentTimeMillis() + ".jpg";
-            File outFile = new File(directory, fileName);
-
-            Uri outputFileUri = Uri.fromFile(outFile);
-
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE );
-            intent.putExtra( MediaStore.EXTRA_OUTPUT, outputFileUri );
-
-
-            //code = 1;
-            sharedPreferences = getActivity().getSharedPreferences("SH", 0);
-            SharedPreferences.Editor edit = sharedPreferences.edit();
-            edit.putString("image", String.valueOf(avatarData));
-            edit.commit();
-
-        } else if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             // Bitmap photo = (Bitmap) data.getExtras().get("data");
             avatarData = data.getData();
-
-            //code = 2;
-            //navHeaderImage.setImageBitmap(photo);
             Glide.with(getContext())
                     .load(avatarData)
                     .apply(RequestOptions.circleCropTransform())
@@ -263,43 +178,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         }
 
     }
-
-    /*@Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable("uri", avatarData);
-
-    }*/
-
-   /* @Override
-    public void onPause() {
-        super.onPause();
-
-        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("image", String.valueOf(avatarData));
-        editor.commit();
-
-        sharedPreferences = getActivity().getSharedPreferences("SH", 0);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString("image", String.valueOf(avatarData));
-        edit.commit();
-
-    }
-*/
-
-  /*  @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (!(savedInstanceState == null)) {
-            avatarData = savedInstanceState.getParcelable("uri");
-            Glide.with(getContext())
-                    .load(avatarData)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(navHeaderImage);
-        }
-    }*/
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -312,13 +190,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-    /*    int b= gridView.getBottom();
-        int t = gridView.getTop();
-
-        if (t == 0){
-            fab.setVisibility(View.GONE);
-            fabUp.setVisibility(View.GONE);
-        }*/
 
         // Scroll Down
         if (scrollDetect < firstVisibleItem) {
@@ -358,6 +229,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         switch (menuItem.getItemId()) {
 
             case R.id.bottom_nav_home:
+                txtNoFav.setText("");
+                txtNoFav.setVisibility(View.GONE);
                 MainActivity.DRAWER_VALUES = 0;
                 fabDown.setVisibility(View.INVISIBLE);
                 fabUp.setVisibility(View.INVISIBLE);
@@ -371,6 +244,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 break;
 
             case R.id.bottom_nav_trend:
+                txtNoFav.setText("");
+                txtNoFav.setVisibility(View.GONE);
                 MainActivity.DRAWER_VALUES = 12;
                 fabDown.setVisibility(View.INVISIBLE);
                 fabUp.setVisibility(View.INVISIBLE);
@@ -1357,14 +1232,16 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
             ImageShow imageShow = new ImageShow();
 
+            if (getResult().size() <= 0) {
+                txtNoFav.setText(R.string.emty_fav_text);
+                txtNoFav.setTextColor(Color.WHITE);
+                txtNoFav.setVisibility(View.VISIBLE);
+            }
+
             gridAdapter = new GridAdapter(getContext(), getResult());
             gridAdapter.notifyDataSetChanged();
             gridView.setAdapter(gridAdapter);
 
-           /* ImageShow imageShow = new ImageShow();
-            for (int i = 0; i < imageShow.stringArrayList.size(); i++) {
-                ImageShow.favData = String.valueOf(imageShow.stringArrayList.get(i));
-            }*/
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -1497,7 +1374,11 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     public void onResume() {
         super.onResume();
         if (MainActivity.DRAWER_VALUES == 50) {
-            //MenuItem m1 = (MenuItem) getActivity().findViewById(R.id.bottom_nav_fav);
+            if (getResult().size() <= 0) {
+                txtNoFav.setText(R.string.emty_fav_text);
+                txtNoFav.setTextColor(Color.WHITE);
+                txtNoFav.setVisibility(View.VISIBLE);
+            }
             MenuItem m = bottomNavigationView.getMenu().getItem(2);
             if (m.isChecked()) {
                 gridAdapter = new GridAdapter(getContext(), getResult());

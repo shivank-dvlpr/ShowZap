@@ -7,5 +7,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="set_wallpaper">Set</string>
     <string name="download">Download</string>
+    <string name="emty_fav_text">Nothing Yet!</string>
 
 </resources>
