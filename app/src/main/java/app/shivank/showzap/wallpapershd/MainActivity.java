@@ -198,8 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_about:
-                startActivity(new Intent(this, About.class));
-                //Toast.makeText(this, "Working", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Working", Toast.LENGTH_SHORT).show();
                 break;
 
         }
