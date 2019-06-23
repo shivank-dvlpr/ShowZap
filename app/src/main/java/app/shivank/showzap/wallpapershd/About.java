@@ -24,7 +24,6 @@ public class About extends AppCompatActivity {
 
         about_cover = findViewById(R.id.about_cover);
         about_profile = findViewById(R.id.about_profile);
-
         Glide.with(this)
                 .load(R.drawable.about_cover)
                 .centerCrop()
