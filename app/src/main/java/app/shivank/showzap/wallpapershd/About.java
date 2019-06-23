@@ -31,7 +31,7 @@ public class About extends AppCompatActivity {
                 .into(about_cover);
 
         Glide.with(this)
-                .load(R.drawable.about_profile)//TODO:- Your App icon Here
+                .load(R.drawable.about_p)//TODO:- Your App icon Here
                 .apply(RequestOptions.circleCropTransform())
                 .into(about_profile);
 
