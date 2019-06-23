@@ -9,4 +9,35 @@
     <string name="download">Download</string>
     <string name="emty_fav_text">Nothing Yet!</string>
 
+    <string name="abstraction">Abstract</string>
+    <string name="animals">Animals</string>
+    <string name="automotive">Automotive</string>
+    <string name="cities">Cities</string>
+    <string name="games">Games</string>
+    <string name="graphics">Graphics</string>
+    <string name="minimal">Minimal</string>
+    <string name="movies">Movies</string>
+    <string name="nature">Nature</string>
+    <string name="quotes">Quotes</string>
+    <string name="technology">Technology</string>
+    <string name="share">Share</string>
+    <string name="rate_app">Rate App</string>
+    <string name="feedback">Feedback</string>
+    <string name="owner_of_wallpaper">Owner of Wallpaper?</string>
+    <string name="about">About</string>
+    <string name="communicate">Communicate</string>
+
+    <string name="app_about_name">App Name</string>
+    <string name="version">Version</string>
+    <string name="developer_head">Developer</string>
+    <string name="developer_name">Shivank Yadav</string>
+    <string name="contact_head">Contact</string>
+    <string name="contact_mail">appmania0011@gmail.com</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="read_privacy_policy">Read Privacy Policy</string>
+    <string name="default_version">V1.0</string>
+
+    <string name="wall_owner_text">If You think that you are the rightful owner of any of these wallpapers then please contact me.
+        I will give you a proper credit or if you want to remove that wallpaper from this application than i surely will.</string>
+
 </resources>

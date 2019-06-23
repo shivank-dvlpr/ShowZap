@@ -169,8 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_wall_owner:
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle("Owner of Wallpaper?");
-                alert.setMessage("If You think that you are the rightful owner of any of these wallpapers then please contact me.I will give you a proper credit " +
-                        "or if you want to remove that wallpaper from this application than i surely will.");
+                alert.setMessage(R.string.wall_owner_text);
                 alert.setPositiveButton("Contact", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

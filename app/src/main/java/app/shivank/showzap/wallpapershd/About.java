@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -13,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 public class About extends AppCompatActivity {
 
     ImageView about_cover, about_profile;
+    TextView version;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class About extends AppCompatActivity {
 
         about_cover = findViewById(R.id.about_cover);
         about_profile = findViewById(R.id.about_profile);
+        version = (TextView) findViewById(R.id.txtVersion);
 
         Glide.with(this)
                 .load(R.drawable.about_cover)
@@ -34,6 +37,8 @@ public class About extends AppCompatActivity {
                 .load(R.drawable.about_p)//TODO:- Your App icon Here
                 .apply(RequestOptions.circleCropTransform())
                 .into(about_profile);
+
+        version.setText(String.format("%s%s","V",BuildConfig.VERSION_NAME));
 
     }
 }

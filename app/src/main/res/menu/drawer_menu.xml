@@ -8,89 +8,89 @@
         <item
             android:id="@+id/nav_abstract"
             android:icon="@drawable/abstarct"
-            android:title="Abstract" />
+            android:title="@string/abstraction" />
 
         <item
             android:id="@+id/nav_animals"
             android:icon="@drawable/animal"
-            android:title="Animals" />
+            android:title="@string/animals" />
 
         <item
             android:id="@+id/nav_automotive"
             android:icon="@drawable/automotive1"
-            android:title="Automotive" />
+            android:title="@string/automotive" />
 
         <item
             android:id="@+id/nav_cities"
             android:icon="@drawable/cities"
-            android:title="Cities" />
+            android:title="@string/cities" />
 
         <item
             android:id="@+id/nav_games"
             android:icon="@drawable/games"
-            android:title="Games" />
+            android:title="@string/games" />
 
         <item
             android:id="@+id/nav_graphics"
             android:icon="@drawable/graphics"
-            android:title="Graphics" />
+            android:title="@string/graphics" />
 
         <item
             android:id="@+id/nav_minimalist"
             android:icon="@drawable/minimal"
-            android:title="Minimal"/>
+            android:title="@string/minimal"/>
 
         <item
             android:id="@+id/nav_movies"
             android:icon="@drawable/movies"
-            android:title="Movies"/>
+            android:title="@string/movies"/>
 
         <item
             android:id="@+id/nav_nature"
             android:icon="@drawable/nature"
-            android:title="Nature"/>
+            android:title="@string/nature"/>
 
         <item
             android:id="@+id/nav_quotes"
             android:icon="@drawable/quotes"
-            android:title="Quotes"/>
+            android:title="@string/quotes"/>
 
         <item
             android:id="@+id/nav_technology"
             android:icon="@drawable/technology"
-            android:title="Technology"/>
+            android:title="@string/technology"/>
 
 
     </group>
 
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
 
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_share"
-                android:title="Share" />
+                android:title="@string/share" />
 
             <item
                 android:id="@+id/nav_rating"
                 android:icon="@drawable/rating"
-                android:title="Rate App" />
+                android:title="@string/rate_app" />
 
             <item
                 android:id="@+id/nav_feedback"
                 android:icon="@drawable/feedback"
-                android:title="Feedback" />
+                android:title="@string/feedback" />
 
             <item
                 android:id="@+id/nav_wall_owner"
                 android:icon="@drawable/question_mark"
-                android:title="Owner of Wallpaper?" />
+                android:title="@string/owner_of_wallpaper" />
 
             <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/info"
-                android:title="About" />
+                android:title="@string/about" />
 
 
         </menu>
