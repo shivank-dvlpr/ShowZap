@@ -84,8 +84,13 @@
 
             <item
                 android:id="@+id/nav_wall_owner"
-                android:icon="@drawable/info"
+                android:icon="@drawable/question_mark"
                 android:title="Owner of Wallpaper?" />
+
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/info"
+                android:title="About" />
 
 
         </menu>

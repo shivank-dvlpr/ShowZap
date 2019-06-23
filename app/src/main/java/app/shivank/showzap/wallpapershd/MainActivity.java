@@ -195,8 +195,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 })
                         .setCancelable(false)
                         .show();
-                //FancyToast.makeText(this, "Available Soon", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
                 break;
+
+            case R.id.nav_about:
+                Toast.makeText(this, "Working", Toast.LENGTH_SHORT).show();
+                break;
+
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

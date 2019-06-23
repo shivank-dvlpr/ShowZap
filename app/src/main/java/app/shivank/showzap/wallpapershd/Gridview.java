@@ -139,16 +139,15 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         databaseReference.keepSynced(true);
 
 
-        sharedPreferences = getActivity().getSharedPreferences("SH", 0);
-        String i = sharedPreferences.getString("image", null);
+        sharedPreferences = getActivity().getSharedPreferences("AVATAR", 0);
+        String getAvatar = sharedPreferences.getString("image", null);
 
-        if (i != null) {
-            Uri l = Uri.parse(i);
+        if (getAvatar != null) {
+            Uri uri = Uri.parse(getAvatar);
             Glide.with(getContext())
-                    .load(l)
-                    .apply(RequestOptions.circleCropTransform())
+                    .load(uri)
+                    .apply(RequestOptions.circleCropTransform())//TODO:- set Placeholder of your app icon
                     .into(navHeaderImage);
-
         }
 
 
@@ -162,19 +161,16 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         //super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            // Bitmap photo = (Bitmap) data.getExtras().get("data");
             avatarData = data.getData();
             Glide.with(getContext())
                     .load(avatarData)
-                    .apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.circleCropTransform())//TODO:- set Placeholder of your app icon
                     .into(navHeaderImage);
 
-            sharedPreferences = getActivity().getSharedPreferences("SH", 0);
+            sharedPreferences = getActivity().getSharedPreferences("AVATAR", 0);
             SharedPreferences.Editor edit = sharedPreferences.edit();
             edit.putString("image", String.valueOf(avatarData));
             edit.commit();
-
-
         }
 
     }

@@ -121,42 +121,22 @@ public class BackgroundTask extends AsyncTask<String, ProgressDialog, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap1) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                    && (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        1001);
-                //progressDialog.dismiss();
+
+        if (ImageShow.sendData == "Set_Wallpaper") {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                intent = new Intent(manager.getCropAndSetWallpaperIntent(getImageUri(bitmap, context)));
+                context.startActivity(intent);
+                Toast.makeText(context, "Adjust Your Wallpaper", Toast.LENGTH_SHORT).show();
                 SetWall.setWallActivity.finish();
-                return;
 
             } else {
-                if (ImageShow.sendData == "Set_Wallpaper") {
-                    intent = new Intent(manager.getCropAndSetWallpaperIntent(getImageUri(bitmap, context)));
-                    context.startActivity(intent);
-                    Toast.makeText(context, "Adjust Your Wallpaper", Toast.LENGTH_SHORT).show();
-                    SetWall.setWallActivity.finish();
-                }
-
-            }
-        } else {
-            if (ImageShow.sendData == "Set_Wallpaper") {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    intent = new Intent(manager.getCropAndSetWallpaperIntent(getImageUri(bitmap, context)));
-                    context.startActivity(intent);
-                    Toast.makeText(context, "Adjust Your Wallpaper", Toast.LENGTH_SHORT).show();
-                    SetWall.setWallActivity.finish();
-
-                } else {
-                    try {
-                        manager.setBitmap(bitmap);
-                    } catch (IOException e) {
-                        Log.d("TAG", e.getLocalizedMessage() + "");
-                    }
+                try {
+                    manager.setBitmap(bitmap);
+                } catch (IOException e) {
+                    Log.d("TAG", e.getLocalizedMessage() + "");
                 }
             }
         }
-
 
         SetWall.setWallActivity.finish();
        /* if (progressDialog.isShowing()) {
@@ -286,7 +266,7 @@ class Downloadtask extends AsyncTask<String, ProgressDialog, Bitmap> {
         //((Activity)context).finish();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FancyToast.makeText(context, "Downloaded!  " + directory, FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
+            FancyToast.makeText(context, "Downloaded!  " + directory, FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
         } else {
             Toast.makeText(context, "Downloaded! " + directory, Toast.LENGTH_LONG).show();
         }

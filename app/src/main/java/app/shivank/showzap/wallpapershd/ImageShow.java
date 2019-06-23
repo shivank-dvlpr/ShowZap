@@ -1,7 +1,6 @@
 package app.shivank.showzap.wallpapershd;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,17 +11,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -33,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.snackbar.Snackbar;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
 
@@ -59,8 +56,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
     int width;
     int height;
 
-
-    int counter;
+    private static int PERMISSION_CODE = 1000;
+    private static int PERMISSION_CODE_SET = 2000;
 
     ArrayAdapter<String> arrayAdapter;
 
@@ -133,7 +130,6 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         //checkImageInDB();
 
 
-
         CircularProgressDrawable progressDrawable = new CircularProgressDrawable(ImageShow.this);
         progressDrawable.setStrokeWidth(5f);
         progressDrawable.setCenterRadius(30f);
@@ -159,7 +155,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                             && (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                1000);
+                                PERMISSION_CODE);
                         return;
 
                     } else {
@@ -177,51 +173,29 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
             case R.id.fab_set_wallpaper:
 
-             /*   String[] items = {"Home Screen", "Lock Screen", "Both"};
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            && (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                PERMISSION_CODE_SET);
+                        return;
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(ImageShow.this);
-                builder.setTitle("Set Wallpaper");
-                builder.setIcon(R.drawable.home_lock);// TODO: Set your app icon here
-                builder.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            BackgroundTask backgroundTask = new BackgroundTask(ImageShow.this);
-                            backgroundTask.execute(bundle);
-                            sendData = "Home_Screen";
-                        } else if (which == 1) {
-                            BackgroundTask backgroundTask = new BackgroundTask(ImageShow.this);
-                            backgroundTask.execute(bundle);
-                            sendData = "Lock_Screen";
-                        } else if (which == 2) {
-                            BackgroundTask backgroundTask = new BackgroundTask(ImageShow.this);
-                            backgroundTask.execute(bundle);
-                            sendData = "Both";
-                        }
+                    } else {
+                        BackgroundTask backgroundTask = new BackgroundTask(ImageShow.this);
+                        backgroundTask.execute(bundle);
+                        sendData = "Set_Wallpaper";
                     }
-                }).create().show();*/
 
-                BackgroundTask backgroundTask = new BackgroundTask(ImageShow.this);
-                backgroundTask.execute(bundle);
-                sendData = "Set_Wallpaper";
+                } else {
+                    BackgroundTask backgroundTask = new BackgroundTask(ImageShow.this);
+                    backgroundTask.execute(bundle);
+                    sendData = "Set_Wallpaper";
+                }
+
                 break;
 
             case R.id.fab_fav:
                 Databasehandler databasehandler = new Databasehandler(this);
-
-                //Cursor c = databasehandler.allData();
-                //Cursor c = Databasehandler.db.rawQuery("SELECT *," + "images" + ".rowid AS rowID" + " FROM " + "images", null);
-                // Cursor c = Databasehandler.db.rawQuery("SELECT *," + "images" + " FROM " + "images" + " WHERE name='" +bundle+"'" , null);
-                //idKey = c.getColumnIndex(String.valueOf(GridAdapter.position));
-                //Cursor cursor = Databasehandler.db.rawQuery("SELECT id FROM images WHERE id='"+bundle+"'",null);
-
-
-                //idKey = c.getColumnIndex("_id");
-
-                /*while (c.moveToNext()) {
-                    idKey = c.getInt(c.getColumnIndexOrThrow(bundle));
-                }*/
-                //Log.d("IDKEY", idKey + "");
 
                 if (fab_fav.getLabelText() == "Remove from Fav.") {
                     databasehandler.deleteFav(bundle);
@@ -230,7 +204,6 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                     fab_fav.setImageResource(R.drawable.not_fav);
                     View snackBar = findViewById(R.id.layout_rel);
                     Snackbar.make(snackBar, "Removed from Favourites.", Snackbar.LENGTH_SHORT).show();
-                    //this.finish();
                 } else {
                     databasehandler.insertImage(bundle);
                     fab_fav.setLabelText("Remove from Fav.");
@@ -238,31 +211,6 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                     View snackBar = findViewById(R.id.layout_rel);
                     Snackbar.make(snackBar, "Added to Favourites!", Snackbar.LENGTH_SHORT).show();
                 }
-
-                /*Cursor c = databasehandler.allData();
-                while (c.moveToNext()) {
-                    String a = c.getString(1);
-
-                    if (!(a.contains(bundle))) {
-
-                    } else {
-                        Toast.makeText(this, "Already in Fav.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }*/
-
-
-                //databasehandler.insertImage(bundle);
-
-              /*  if (databasehandler.insertImage(bundle)){
-                    Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
-                    //Log.d("ImageBunde",)
-                }else {
-                    Toast.makeText(this, "Not Successful", Toast.LENGTH_SHORT).show();
-                }*/
-                //FancyToast.makeText(ImageShow.this, "In Development!", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
-                //Create Loop
-                //sendData = "fav";
 
                 break;
         }
@@ -293,7 +241,29 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        if (requestCode == PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Downloadtask downloadtask = new Downloadtask(this);
+                downloadtask.execute(bundle);
+            } else {
+                FancyToast.makeText(this, "Permission Denied", FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
+
+            }
+        } else if (requestCode == PERMISSION_CODE_SET) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                BackgroundTask backgroundTask = new BackgroundTask(ImageShow.this);
+                backgroundTask.execute(bundle);
+                sendData = "Set_Wallpaper";
+            } else {
+                FancyToast.makeText(this, "Permission Denied", FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
+            }
+        }
+
+    }
 }
 
 
