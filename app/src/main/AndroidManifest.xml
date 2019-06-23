@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".About"></activity>
-        <activity android:name=".SetWall" />
+        <activity android:name=".SetWall"></activity>
         <activity android:name=".DownloadWall" />
         <activity android:name=".TestFirebase" />
         <activity

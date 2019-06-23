@@ -24,13 +24,14 @@ public class About extends AppCompatActivity {
 
         about_cover = findViewById(R.id.about_cover);
         about_profile = findViewById(R.id.about_profile);
+
         Glide.with(this)
                 .load(R.drawable.about_cover)
                 .centerCrop()
                 .into(about_cover);
 
         Glide.with(this)
-                .load(R.drawable.about_prof)//TODO:- Your App icon Here
+                .load(R.drawable.about_profile)//TODO:- Your App icon Here
                 .apply(RequestOptions.circleCropTransform())
                 .into(about_profile);
 
