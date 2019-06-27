@@ -82,6 +82,17 @@
             fab:fab_colorNormal="#FFEA00"
             fab:fab_label="Favourite"
             fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorPressed="#76FF03"
+            android:src="@drawable/info"
+            fab:fab_colorNormal="#FFEA00"
+            fab:fab_label="Info"
+            fab:fab_size="mini" />
+
     </com.github.clans.fab.FloatingActionMenu>
 
 

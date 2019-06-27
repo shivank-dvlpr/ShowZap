@@ -38,6 +38,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -78,6 +79,10 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     SharedPreferences sharedPreferences1;
     int code;
     TextView txtNoFav;
+    static String txtName, txtArt, txtWebsite;
+    String childKey;
+
+    int l;
 
     public Gridview() {
         // Required empty public constructor
@@ -372,6 +377,35 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             databaseReference.child("Categories").child("Abstract").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+/*
+                    l++;
+
+                    childKey = databaseReference.child("Categories").child("Abstract").child(String.valueOf(l)).getKey();
+
+
+
+
+
+                    if (childKey.equals("1")){
+                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child("1").child("Art").setValue("Shivank");
+                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child("1").child("Art").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                txtName = dataSnapshot.getValue(String.class);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }*/
+
+
+
 
                     value = dataSnapshot.getValue(String.class);
                     list.add(value);
@@ -1244,7 +1278,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
                     Intent intent = new Intent(getActivity(), ImageShow.class);
 
-                    ImageShow imageShow = new ImageShow();
                     for (String i : getResult()) {
                         model = new Model(getResult().get(position));
                         intent.putExtra("KEY", model.strings);

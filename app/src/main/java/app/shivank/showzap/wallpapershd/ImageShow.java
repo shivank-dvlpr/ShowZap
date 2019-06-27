@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,11 @@ import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
@@ -39,11 +45,15 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
     public static int SET;
 
+    static String txtArt, txtName, txtWebsite;
+
     LinearLayout homeScreen;
 
     static String sendData;
 
     String bundle;
+
+    String value;
 
     static GridAdapter gridAdapter;
 
@@ -69,14 +79,26 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
     ArrayList<String> stringArrayList = new ArrayList<>();
 
-    static String favData;
+    static String a;
 
     FloatingActionMenu floatingActionMenu;
-    FloatingActionButton fab_download, fab_set_wallpaper, fab_fav;
+    FloatingActionButton fab_download, fab_set_wallpaper, fab_fav, fab_info;
 
     Intent intent;
 
+    boolean enter = true;
+
     int idKey;
+
+    DataSnapshot dataSnapshot1;
+
+    DatabaseReference databaseReference;
+
+    static String name, art, website;
+
+    ArrayList<String> key;
+
+    Intent infoClass;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +120,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
         getSupportActionBar().hide();
 
+        key = new ArrayList<>();
+
         img11 = findViewById(R.id.img11);
 
         stringArrayList = new ArrayList<>();
@@ -108,10 +132,11 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         fab_download = findViewById(R.id.fab_download);
         fab_set_wallpaper = findViewById(R.id.fab_set_wallpaper);
         fab_fav = (FloatingActionButton) findViewById(R.id.fab_fav);
+        fab_info = (FloatingActionButton) findViewById(R.id.fab_info);
         fab_download.setOnClickListener(this);
         fab_set_wallpaper.setOnClickListener(this);
         fab_fav.setOnClickListener(this);
-
+        fab_info.setOnClickListener(this);
 
         intent = getIntent();
 
@@ -140,6 +165,44 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 .load(bundle)
                 .placeholder(progressDrawable)
                 .into(img11);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Categories").child("Abstract").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int count = (int) dataSnapshot.getChildrenCount();
+
+                infoClass = new Intent(ImageShow.this, WallInfo.class);
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    Log.d("BUNDLEE", bundle + " - " + s.getValue(String.class));
+
+
+                    if (bundle.equals(s.getValue(String.class))) {
+                        String already = String.valueOf(databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()));
+                        Toast.makeText(ImageShow.this, "Done", Toast.LENGTH_SHORT).show();
+                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Art").setValue("");
+                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Name").setValue("");
+                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Website").setValue("");
+                        dataSnapshot1 = s;
+                        //key.add(dataSnapshot1.getKey());
+                        Model model = new Model(s.getKey());
+                        infoClass.putExtra("Data", model.strings);
+                        infoClass.putExtra("Bundle", bundle);
+                        infoClass.putExtra("Value", s.getValue(String.class));
+                    }
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
@@ -211,6 +274,13 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                     View snackBar = findViewById(R.id.layout_rel);
                     Snackbar.make(snackBar, "Added to Favourites!", Snackbar.LENGTH_SHORT).show();
                 }
+
+                break;
+
+            case R.id.fab_info:
+
+                startActivity(infoClass);
+
 
                 break;
         }
