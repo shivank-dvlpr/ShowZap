@@ -38,25 +38,26 @@ public class WallInfo extends AppCompatActivity {
         String Bundle = intent.getStringExtra("Bundle");
         String Value = intent.getStringExtra("Value");
 
+        if (Bundle != null && Value != null){
+            if (Bundle.equals(Value)) {
+                databaseReference.child("WallInfo").child("Categories").child("Abstract").child(key).child("Name").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                        txtName1 = dataSnapshot.getValue(String.class);
+                        Log.d("NAMEE", Bundle + " - " + Value);
+                        txtName.setText(txtName1);
 
-        if (Bundle.equals(Value)) {
-            databaseReference.child("WallInfo").child("Categories").child("Abstract").child(key).child("Name").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    }
 
-                    txtName1 = dataSnapshot.getValue(String.class);
-                    Log.d("NAMEE", Bundle + " - " + Value);
-                    txtName.setText(txtName1);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+                    }
+                });
+            }
         }
+
 
 
         txtWebsite.setText(ImageShow.website);

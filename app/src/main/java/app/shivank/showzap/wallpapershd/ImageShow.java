@@ -100,6 +100,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
     Intent infoClass;
 
+    Model model;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +142,6 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
         intent = getIntent();
 
-        Model model = new Model();
 
         try {
             bundle = intent.getExtras().getString("KEY");
@@ -177,20 +178,48 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     Log.d("BUNDLEE", bundle + " - " + s.getValue(String.class));
 
+                    //String keyName = s.getKey();
 
-                    if (bundle.equals(s.getValue(String.class))) {
-                        String already = String.valueOf(databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()));
-                        Toast.makeText(ImageShow.this, "Done", Toast.LENGTH_SHORT).show();
-                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Art").setValue("");
-                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Name").setValue("");
-                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Website").setValue("");
-                        dataSnapshot1 = s;
-                        //key.add(dataSnapshot1.getKey());
-                        Model model = new Model(s.getKey());
-                        infoClass.putExtra("Data", model.strings);
-                        infoClass.putExtra("Bundle", bundle);
-                        infoClass.putExtra("Value", s.getValue(String.class));
-                    }
+                    databaseReference.child("WallInfo").child("Categories").child("Abstract").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            if (bundle.equals(s.getValue(String.class))) {
+
+                                for (DataSnapshot ll : dataSnapshot.getChildren()) {
+                                    Log.d("VALUEE", !dataSnapshot.hasChild(ll.getKey()) + "");
+                                    if (!dataSnapshot.hasChild(s.getKey())) {
+                                        Toast.makeText(ImageShow.this, "Done", Toast.LENGTH_SHORT).show();
+                                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Art").setValue("");
+                                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Name").setValue("");
+                                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Website").setValue("");
+                                        dataSnapshot1 = s;
+                                        //key.add(dataSnapshot1.getKey());
+                                    }
+
+                                }
+
+
+                                model = new Model(s.getKey());
+                                infoClass.putExtra("Data", model.strings);
+                                infoClass.putExtra("Bundle", bundle);
+                                infoClass.putExtra("Value", s.getValue(String.class));
+
+                            }
+                           /* for (DataSnapshot df : dataSnapshot.getChildren()) {
+
+
+
+                            }*/
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
 
                 }
@@ -280,7 +309,6 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
             case R.id.fab_info:
 
                 startActivity(infoClass);
-
 
                 break;
         }
