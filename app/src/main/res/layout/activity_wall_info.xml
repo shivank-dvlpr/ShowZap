@@ -19,65 +19,67 @@
             android:orientation="horizontal"
             android:weightSum="10">
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="wrap_content"
-                android:textSize="30sp"
-                android:text="Name :"/>
-
-            <TextView
-                android:id="@+id/txtName"
-                android:layout_width="0dp"
-                android:layout_weight="7"
-                android:layout_height="wrap_content"
-                android:textSize="30sp" />
-
-        </LinearLayout>
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="wrap_content"
-                android:textSize="30sp"
-                android:text="Art :"/>
-
-            <TextView
-                android:id="@+id/txtArt"
-                android:layout_width="0dp"
-                android:layout_weight="7"
-                android:layout_height="wrap_content"
-                android:textSize="30sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10">
-            <TextView
                 android:id="@+id/txtHead"
                 android:layout_width="0dp"
                 android:layout_weight="4"
                 android:layout_height="wrap_content"
                 android:textSize="30sp"
-                android:text="Website :"/>
+                android:text="Art Name :"/>
 
             <TextView
-                android:id="@+id/txtWebsite"
+                android:id="@+id/txtArtName"
                 android:layout_width="0dp"
                 android:layout_weight="6"
                 android:layout_height="wrap_content"
                 android:textSize="30sp" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:text="Art by :"/>
+
+            <TextView
+                android:id="@+id/txtArtBy"
+                android:layout_width="0dp"
+                android:layout_weight="7"
+                android:layout_height="wrap_content"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:text="Source :"/>
+
+            <TextView
+                android:id="@+id/txtSource"
+                android:layout_width="0dp"
+                android:layout_weight="7"
+                android:layout_height="wrap_content"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

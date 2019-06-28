@@ -2,6 +2,8 @@ package app.shivank.showzap.wallpapershd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -16,8 +18,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class WallInfo extends AppCompatActivity {
 
-    public static TextView txtName, txtArt, txtWebsite, txtHead;
-    String txtName1, txtArt1, txtWebsite1;
+    public static TextView txtArtBy, txtSource, txtArtName, txtHead;
+    String txtArtByString, txtArtSourceString, txtArtNameString;
+    DatabaseReference databaseReference;
+    Intent intent;
+    String key;
+    String Bundle;
+    String Value;
 
 
     @Override
@@ -25,44 +32,110 @@ public class WallInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wall_info);
 
-        txtName = findViewById(R.id.txtName);
-        txtArt = findViewById(R.id.txtArt);
-        txtWebsite = findViewById(R.id.txtWebsite);
+        txtArtBy = findViewById(R.id.txtArtBy);
+        txtSource = findViewById(R.id.txtSource);
+        txtArtName = findViewById(R.id.txtArtName);
         txtHead = findViewById(R.id.txtHead);
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.keepSynced(true);
 
-        Intent intent = getIntent();
-        String key = intent.getStringExtra("Data");
-        String Bundle = intent.getStringExtra("Bundle");
-        String Value = intent.getStringExtra("Value");
+        intent = getIntent();
+        key = intent.getStringExtra("Data");
+        Bundle = intent.getStringExtra("Bundle");
+        Value = intent.getStringExtra("Value");
 
-        if (Bundle != null && Value != null){
+        if (Bundle != null && Value != null) {
             if (Bundle.equals(Value)) {
-                databaseReference.child("WallInfo").child("Categories").child("Abstract").child(key).child("Name").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        txtName1 = dataSnapshot.getValue(String.class);
-                        Log.d("NAMEE", Bundle + " - " + Value);
-                        txtName.setText(txtName1);
 
-                    }
+                if (ImageShow.WALLINFOVALUE == 1) {
+                    retrieveWallInfo("Abstract");
+                } else if (ImageShow.WALLINFOVALUE == 2) {
+                    retrieveWallInfo("Animals");
+                } else if (ImageShow.WALLINFOVALUE == 3) {
+                    retrieveWallInfo("Automotive");
+                } else if (ImageShow.WALLINFOVALUE == 4) {
+                    retrieveWallInfo("Cities");
+                } else if (ImageShow.WALLINFOVALUE == 5) {
+                    retrieveWallInfo("Games");
+                } else if (ImageShow.WALLINFOVALUE == 6) {
+                    retrieveWallInfo("Graphics");
+                } else if (ImageShow.WALLINFOVALUE == 7) {
+                    retrieveWallInfo("Minimalist");
+                } else if (ImageShow.WALLINFOVALUE == 8) {
+                    retrieveWallInfo("Movies");
+                } else if (ImageShow.WALLINFOVALUE == 9) {
+                    retrieveWallInfo("Nature");
+                } else if (ImageShow.WALLINFOVALUE == 10) {
+                    retrieveWallInfo("Quotes");
+                } else if (ImageShow.WALLINFOVALUE == 11) {
+                    retrieveWallInfo("Technology");
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
             }
         }
 
 
+    }
 
-        txtWebsite.setText(ImageShow.website);
-        txtArt.setText("12");
-        //txtHead.setText(ImageShow.a);
+    private void retrieveWallInfo(String categoryName) {
+        databaseReference.child("WallInfo").child("Categories").child(categoryName).child(key).child("Art by").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                txtArtByString = dataSnapshot.getValue(String.class);
+                Log.d("NAMEE", Bundle + " - " + Value);
+                txtArtBy.setText(txtArtByString);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        databaseReference.child("WallInfo").child("Categories").child(categoryName).child(key).child("Source").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                txtArtSourceString = dataSnapshot.getValue(String.class);
+                Log.d("NAMEE", Bundle + " - " + Value);
+                if (!txtArtSourceString.equals("N/A")) {
+                    txtSource.setMovementMethod(LinkMovementMethod.getInstance());
+                    String text = "<a href='" + txtArtSourceString + "'> " + txtArtSourceString + " </a>";
+                    txtSource.setText(Html.fromHtml(text));
+                } else {
+                    txtSource.setLinksClickable(false);
+                    txtSource.setText("N/A");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        databaseReference.child("WallInfo").child("Categories").child(categoryName).child(key).child("Art Name").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                txtArtNameString = dataSnapshot.getValue(String.class);
+                Log.d("NAMEE", Bundle + " - " + Value);
+                txtArtName.setText(txtArtNameString);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
+
 }

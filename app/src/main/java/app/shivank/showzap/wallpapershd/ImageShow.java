@@ -45,6 +45,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
     public static int SET;
 
+    public static int WALLINFOVALUE;
+
     static String txtArt, txtName, txtWebsite;
 
     LinearLayout homeScreen;
@@ -101,6 +103,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
     Intent infoClass;
 
     Model model;
+
+    String universalKey;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -167,72 +171,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 .placeholder(progressDrawable)
                 .into(img11);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("Categories").child("Abstract").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                int count = (int) dataSnapshot.getChildrenCount();
-
-                infoClass = new Intent(ImageShow.this, WallInfo.class);
-                for (DataSnapshot s : dataSnapshot.getChildren()) {
-                    Log.d("BUNDLEE", bundle + " - " + s.getValue(String.class));
-
-                    //String keyName = s.getKey();
-
-                    databaseReference.child("WallInfo").child("Categories").child("Abstract").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            if (bundle.equals(s.getValue(String.class))) {
-
-                                for (DataSnapshot ll : dataSnapshot.getChildren()) {
-                                    Log.d("VALUEE", !dataSnapshot.hasChild(ll.getKey()) + "");
-                                    if (!dataSnapshot.hasChild(s.getKey())) {
-                                        Toast.makeText(ImageShow.this, "Done", Toast.LENGTH_SHORT).show();
-                                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Art").setValue("");
-                                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Name").setValue("");
-                                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child(s.getKey()).child("Website").setValue("");
-                                        dataSnapshot1 = s;
-                                        //key.add(dataSnapshot1.getKey());
-                                    }
-
-                                }
-
-
-                                model = new Model(s.getKey());
-                                infoClass.putExtra("Data", model.strings);
-                                infoClass.putExtra("Bundle", bundle);
-                                infoClass.putExtra("Value", s.getValue(String.class));
-
-                            }
-                           /* for (DataSnapshot df : dataSnapshot.getChildren()) {
-
-
-
-                            }*/
-
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+        WallInfoData();
 
     }
 
@@ -310,6 +249,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
                 startActivity(infoClass);
 
+
                 break;
         }
 
@@ -362,6 +302,100 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         }
 
     }
+
+    private void WallInfoBackend(int wallInfoValue, String categoryName) {
+
+        WALLINFOVALUE = wallInfoValue;
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Categories").child(categoryName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int count = (int) dataSnapshot.getChildrenCount();
+
+                infoClass = new Intent(ImageShow.this, WallInfo.class);
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    Log.d("BUNDLEE", bundle + " - " + s.getValue(String.class));
+
+                    //String keyName = s.getKey();
+
+                    databaseReference.child("WallInfo").child("Categories").child(categoryName).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            if (bundle.equals(s.getValue(String.class))) {
+
+                                //Log.d("VALUEE", !dataSnapshot.hasChild(ll.getKey()) + "");
+                                if (!dataSnapshot.hasChild(s.getKey())) {
+                                    //Toast.makeText(ImageShow.this, "Done", Toast.LENGTH_SHORT).show();
+                                    databaseReference.child("WallInfo").child("Categories").child(categoryName).child(s.getKey()).child("Art by").setValue("N/A");
+                                    databaseReference.child("WallInfo").child("Categories").child(categoryName).child(s.getKey()).child("Source").setValue("N/A");
+                                    databaseReference.child("WallInfo").child("Categories").child(categoryName).child(s.getKey()).child("Art Name").setValue("N/A");
+                                    dataSnapshot1 = s;
+                                    //key.add(dataSnapshot1.getKey());
+                                }
+
+
+                                model = new Model(s.getKey());
+                                infoClass.putExtra("Data", model.strings);
+                                infoClass.putExtra("Bundle", bundle);
+                                infoClass.putExtra("Value", s.getValue(String.class));
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void WallInfoData() {
+
+
+        if (MainActivity.DRAWER_VALUES == 1) {
+            WallInfoBackend(1, "Abstract");
+        } else if (MainActivity.DRAWER_VALUES == 2) {
+            WallInfoBackend(2, "Animals");
+        } else if (MainActivity.DRAWER_VALUES == 3) {
+            WallInfoBackend(3, "Automotive");
+        } else if (MainActivity.DRAWER_VALUES == 4) {
+            WallInfoBackend(4, "Cities");
+        } else if (MainActivity.DRAWER_VALUES == 5) {
+            WallInfoBackend(5, "Games");
+        } else if (MainActivity.DRAWER_VALUES == 6) {
+            WallInfoBackend(6, "Graphics");
+        } else if (MainActivity.DRAWER_VALUES == 7) {
+            WallInfoBackend(7, "Minimalist");
+        } else if (MainActivity.DRAWER_VALUES == 8) {
+            WallInfoBackend(8, "Movies");
+        } else if (MainActivity.DRAWER_VALUES == 9) {
+            WallInfoBackend(9, "Nature");
+        } else if (MainActivity.DRAWER_VALUES == 10) {
+            WallInfoBackend(10, "Quotes");
+        } else if (MainActivity.DRAWER_VALUES == 11) {
+            WallInfoBackend(11, "Technology");
+        } else {
+            fab_info.setVisibility(View.GONE);
+        }
+
+
+    }
+
 }
 
 
