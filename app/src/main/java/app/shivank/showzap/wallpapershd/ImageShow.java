@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,7 +84,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
     static String a;
 
     FloatingActionMenu floatingActionMenu;
-    FloatingActionButton fab_download, fab_set_wallpaper, fab_fav, fab_info;
+    FloatingActionButton fab_download, fab_set_wallpaper, fab_fav;
+    FloatingActionButton fab_info;
 
     Intent intent;
 
@@ -106,6 +107,8 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
     String universalKey;
 
+    Handler handler;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,11 +118,19 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
         this.overridePendingTransition(R.anim.animate_opening_intent, R.anim.animate_exit_intent);
 
-     /*   getWindow().setAllowEnterTransitionOverlap(false);
-        Slide slide = new Slide(Gravity.RIGHT);
-        getWindow().setReturnTransition(slide);*/
-
         setContentView(R.layout.image_show);
+
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!MainActivity.checkInternetConnection(ImageShow.this)) {
+                    View snackBar = findViewById(R.id.layout_rel);
+                    Snackbar.make(snackBar, "No Internet Connection!", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        },1000);
+
 
 
         fav_images = new ArrayList<>();
@@ -173,6 +184,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
         WallInfoData();
 
+
     }
 
     @Override
@@ -181,6 +193,11 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         switch (v.getId()) {
 
             case R.id.fab_download:
+
+                if (!MainActivity.checkInternetConnection(ImageShow.this)) {
+                    FancyToast.makeText(ImageShow.this, "Please check your Internet Connection.", FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
+                    return;
+                }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -203,6 +220,11 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
 
 
             case R.id.fab_set_wallpaper:
+
+                if (!MainActivity.checkInternetConnection(ImageShow.this)) {
+                    FancyToast.makeText(ImageShow.this, "No Internet Access!", FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
+                    return;
+                }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED

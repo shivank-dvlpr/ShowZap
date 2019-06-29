@@ -1,7 +1,11 @@
 package app.shivank.showzap.wallpapershd;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
@@ -38,6 +42,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         img11 = findViewById(R.id.img11);
+
+        if (!checkInternetConnection(this)){
+            startActivity(new Intent(this, NoInternet.class));
+            finish();
+        }
 
         DRAWER_VALUES = 0; // HomeActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Gridview()).commit();
@@ -204,6 +213,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public static boolean checkInternetConnection(Context context){
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = null;
+        if (connectivityManager != null) {
+            networkInfo = connectivityManager.getActiveNetworkInfo();
+        }
+        if (networkInfo != null){
+            networkInfo.isConnected();
+            return true;
+        }else {
+            return false;
+        }
     }
 
 }

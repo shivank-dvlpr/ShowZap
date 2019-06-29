@@ -1,7 +1,7 @@
 package app.shivank.showzap.wallpapershd;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,14 +25,13 @@ import com.google.firebase.database.ValueEventListener;
 public class WallInfo extends AppCompatActivity {
 
     public static TextView txtArtBy, txtSource, txtArtName, txtHead;
-    String txtArtByString, txtArtSourceString, txtArtNameString;
+    public static String txtArtByString, txtArtSourceString, txtArtNameString;
     DatabaseReference databaseReference;
     Intent intent;
     String key;
     String Bundle;
     String Value;
     ImageView wallInfoBG;
-    Bitmap bundleImage;
 
 
     @Override
@@ -41,8 +41,8 @@ public class WallInfo extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_wall_info);
-
         getSupportActionBar().hide();
+        this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
         txtArtBy = findViewById(R.id.txtArtBy);
         txtSource = findViewById(R.id.txtSource);
@@ -58,15 +58,14 @@ public class WallInfo extends AppCompatActivity {
         Bundle = intent.getStringExtra("Bundle");
         Value = intent.getStringExtra("Value");
 
-
         Glide.with(this)
                 .load(Bundle)
-                .override(150,150)
+                .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
+                .override(150, 150)
                 .into(wallInfoBG);
 
         if (Bundle != null && Value != null) {
             if (Bundle.equals(Value)) {
-
 
                 if (ImageShow.WALLINFOVALUE == 1) {
                     retrieveWallInfo("Abstract");
@@ -91,7 +90,6 @@ public class WallInfo extends AppCompatActivity {
                 } else if (ImageShow.WALLINFOVALUE == 11) {
                     retrieveWallInfo("Technology");
                 }
-
 
             }
         }
@@ -125,9 +123,12 @@ public class WallInfo extends AppCompatActivity {
                 if (!txtArtSourceString.equals("N/A")) {
                     txtSource.setMovementMethod(LinkMovementMethod.getInstance());
                     String text = "<a href='" + txtArtSourceString + "'> " + txtArtSourceString + " </a>";
-                    txtSource.setText(Html.fromHtml(text));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        txtSource.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT));
+                    } else {
+                        txtSource.setText(Html.fromHtml(text));
+                    }
                 } else {
-                    txtSource.setLinksClickable(false);
                     txtSource.setText("N/A");
                 }
 
@@ -145,7 +146,6 @@ public class WallInfo extends AppCompatActivity {
                 txtArtNameString = dataSnapshot.getValue(String.class);
                 txtArtName.setText(txtArtNameString);
 
-
             }
 
             @Override
@@ -156,4 +156,9 @@ public class WallInfo extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
 }

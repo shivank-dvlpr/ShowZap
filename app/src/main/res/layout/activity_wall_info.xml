@@ -8,7 +8,6 @@
     tools:context=".WallInfo">
 
 
-
     <ImageView
         android:id="@+id/wallInfoBG"
         android:layout_width="match_parent"
@@ -20,13 +19,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="#2C000000"
-
         android:padding="10dp"
         android:layout_centerInParent="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:orientation="horizontal"
             android:weightSum="10">
             <TextView
@@ -36,16 +35,17 @@
                 android:textColor="#FFF"
                 android:textStyle="bold"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:text="Art Name :"/>
 
             <TextView
                 android:id="@+id/txtArtName"
                 android:layout_width="0dp"
                 android:layout_weight="6"
+                android:gravity="center"
                 android:textColor="#FFF"
                 android:layout_height="wrap_content"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -53,23 +53,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:padding="5dp"
             android:weightSum="10">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:textColor="#FFF"
                 android:textStyle="bold"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:text="Art by :"/>
 
             <TextView
                 android:id="@+id/txtArtBy"
                 android:layout_width="0dp"
-                android:layout_weight="7"
+                android:layout_weight="6"
                 android:textColor="#FFF"
+                android:gravity="center"
                 android:layout_height="wrap_content"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -79,23 +81,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:padding="5dp"
             android:weightSum="10">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:textColor="#FFF"
                 android:textStyle="bold"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:text="Source :"/>
 
             <TextView
                 android:id="@+id/txtSource"
                 android:layout_width="0dp"
-                android:layout_weight="7"
+                android:layout_weight="6"
                 android:textColor="#FFF"
+                android:gravity="center"
                 android:layout_height="wrap_content"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 

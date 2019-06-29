@@ -41,6 +41,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
 
@@ -102,6 +103,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         navHeaderImage = v.findViewById(R.id.nav_header_image);
 
         txtNoFav = (TextView) view.findViewById(R.id.txtNoFav);
+
+
 
         navigatin_drawer_header = MainActivity.navigationView.getHeaderView(0);
         navHeaderImage = navigatin_drawer_header.findViewById(R.id.nav_header_image);

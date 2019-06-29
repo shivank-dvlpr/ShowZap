@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "app.shivank.showzap.wallpapershd"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -45,6 +45,5 @@ dependencies {
     implementation 'android.arch.work:work-runtime:1.0.1'
     implementation "com.airbnb.android:lottie:3.0.6"
     implementation 'de.hdodenhof:circleimageview:3.0.0'
-
 
 }
