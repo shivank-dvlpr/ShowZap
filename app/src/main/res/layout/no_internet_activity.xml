@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/no_internet_rel"
     android:layout_height="match_parent"
     tools:context=".NoInternet">
 
@@ -17,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="8"
+            android:background="#000"
             app:lottie_fileName="no_network.json"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"/>
@@ -26,22 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
+            android:background="#000"
             app:lottie_fileName="no_internet.json"
             app:lottie_autoPlay="true"
-            app:lottie_colorFilter="#9A000000"
             app:lottie_loop="true"/>
-
-      <!--  <Button
-            android:id="@+id/findFav"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="See Your Fav."
-            android:gravity="center"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:layout_margin="10dp"
-            android:textColor="#000000"/>-->
 
     </LinearLayout>
 
