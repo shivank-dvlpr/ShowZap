@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
@@ -142,21 +143,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_share:
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "ShowZap");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "https://youtube.com/techwithshivank");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "ShowZap 4k,HD Wallpapers");
+                shareIntent.putExtra(Intent.EXTRA_TEXT,  "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
                 startActivity(Intent.createChooser(shareIntent, "Share Using"));
-                //TODO: Replace it when upload app on PlayStore
-                //shareIntent.putExtra(Intent.EXTRA_TEXT, "4K HD" + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID");
                 break;
 
             case R.id.nav_rating:
-                FancyToast.makeText(this, "Available Soon", FancyToast.LENGTH_SHORT, FancyToast.INFO, false).show();
-                //TODO: Enable it when upload app on PlayStore
-              /*  try {
+                try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID)));
                 } catch (android.content.ActivityNotFoundException activityNotFoundE) {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID)));
-                }*/
+                }
                 break;
 
             case R.id.nav_feedback:

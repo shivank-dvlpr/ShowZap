@@ -37,7 +37,7 @@
     <string name="read_privacy_policy"><a href="https://privacypolicyforshivankapps.blogspot.com/2019/07/showzap-app-privacy-policy.html">Read Privacy Policy</a></string>
     <string name="default_version">V1.0</string>
 
-    <string name="wall_owner_text">If You think that you are the rightful owner of any of these wallpapers then please contact me.
-        I will give you a proper credit or if you want to remove that wallpaper from this application than i surely will.</string>
+    <string name="wall_owner_text">If You think that you are the rightful owner of any of these wallpapers then please contact us.
+        We will give you a proper credit or if you want to remove that wallpaper from this application than we surely remove it.</string>
 
 </resources>

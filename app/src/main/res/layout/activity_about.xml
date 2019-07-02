@@ -143,7 +143,7 @@
                 android:textSize="20sp"
                 android:textColor="#000000"
                 android:background="#FCB283"
-                android:layout_marginBottom="12dp"/> <!-- TODO: Link Privacy Policy -->
+                android:layout_marginBottom="12dp"/>
 
         </LinearLayout>
     </ScrollView>
