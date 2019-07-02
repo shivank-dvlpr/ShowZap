@@ -108,19 +108,10 @@ public class GridAdapter extends BaseAdapter {
 
             gridView = inflater.inflate(R.layout.custom_layout, null, false);
 
-            LayoutInflater a = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = a.inflate(R.layout.fav_fragment, null);
-            favImage = (ImageView) v.findViewById(R.id.fav_image);
 
 
         }
         icon = (ImageView) gridView.findViewById(R.id.imageView);
-      /*  lottieAnimationView = new LottieAnimationView(context);
-        //lottieAnimationView.setImageAssetsFolder("dino.json");
-        lottieAnimationView.setAnimation("ufo.json");
-        lottieAnimationView.setRepeatCount(10);
-        lottieAnimationView.enableMergePathsForKitKatAndAbove(true);
-        lottieAnimationView.playAnimation();*/
 
         final LottieDrawable lottieDrawable = new LottieDrawable();
         lottieDrawable.setRepeatCount(10);

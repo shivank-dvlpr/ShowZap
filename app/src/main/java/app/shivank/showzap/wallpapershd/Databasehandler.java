@@ -6,12 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import static android.provider.MediaStore.Audio.Playlists.Members._ID;
 
 public class Databasehandler extends SQLiteOpenHelper {
     // All Static variables
@@ -39,7 +33,7 @@ public class Databasehandler extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
         //mContentResolver = context.getContentResolver();
 
-       // db = this.getWritableDatabase();
+        // db = this.getWritableDatabase();
 
     }
 
@@ -47,77 +41,54 @@ public class Databasehandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-       /* String SQL_CREATE_IMAGE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_NAME + " BLOB NOT NULL "
-                + " );";*/
-
         db.execSQL("Create TABLE images( id INTEGER PRIMARY KEY, name TEXT)");
-      /*  String CREATE_TABLE = "CREATE TABLE " + TABLE_DATA + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_IMG_URL + " TEXT,"
-                + KEY_IS_FAVOURITE + " INTEGER" + ")";
-        db.execSQL(CREATE_TABLE);*/
     }
 
-   /* public void addToDb(byte[] image) {
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_NAME, image);
-        db.insert(TABLE_NAME, null, cv);
-    }*/
+    public boolean insertImage(String image) {
+        SQLiteDatabase database = this.getWritableDatabase();
 
-   public boolean insertImage(String image){
-       SQLiteDatabase database = this.getWritableDatabase();
-       /* FileInputStream fs = new FileInputStream(image);
-        byte[] imgByte = new byte[fs.available()];
-        fs.read(imgByte);*/
-       ContentValues contentValues = new ContentValues();
-       //database.execSQL("delete from "+ "images"); // delete all data from database at once
-       String ll = "insert into " + "images" + " values(null, '"+ image+"')";
-       database.execSQL(ll);
-       database.close();
-      /* contentValues.put("name", image);
-       database.insert("images", null, contentValues);*/
-       //Log.d("InsertImage", allData() + "");
-       //fs.close();
-       return true;
-   }
-
+        ContentValues contentValues = new ContentValues();
+        //database.execSQL("delete from "+ "images"); // delete all data from database at once
+        String ll = "insert into " + "images" + " values(null, '" + image + "')";
+        database.execSQL(ll);
+        database.close();
+        return true;
+    }
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if existed
         //db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("drop table if exists images");
         // Create tables again
         onCreate(db);
     }
 
-    public Cursor allData(){
-       SQLiteDatabase db = this.getWritableDatabase();
-       Cursor cursor = db.rawQuery("select * from images", null);
-       return cursor;
+    public Cursor allData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from images", null);
+        return cursor;
     }
 
-    public void deleteFav(String  id){
+    public void deleteFav(String id) {
 
-       String where = "name=?";
+        String where = "name=?";
 
-       SQLiteDatabase db = this.getWritableDatabase();
-       db.delete("images",  where, new String[]{id});
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("images", where, new String[]{id});
 
-      /* SQLiteDatabase db = this.getWritableDatabase();
-       db.execSQL("delete from " + "images" + " where " + "id" + " = " + id +"");*/
-       db.close();
+        db.close();
 
     }
 
 
-    public void delete(int id){
+    public void delete(int id) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         //Cursor cursor = db.rawQuery("SELECT id FROM images WHERE id='"+id+"'",null);
 
-        db.execSQL("delete from" + " images" + " where id="+id);
+        db.execSQL("delete from" + " images" + " where id=" + id);
 
         db.close();
         //db.delete("images","id=?", new String[]{id});

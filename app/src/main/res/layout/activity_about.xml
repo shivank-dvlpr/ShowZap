@@ -15,8 +15,8 @@
 
     <ImageView
         android:id="@+id/about_profile"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="107dp"
+        android:layout_height="107dp"
         android:src="@mipmap/ic_launcher_round"
         android:layout_centerInParent="true"
         android:layout_alignBottom="@id/about_cover"
@@ -134,14 +134,16 @@
                 android:background="#FCB283"/>
 
             <TextView
+                android:id="@+id/txtReadPrivacyPolicy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/read_privacy_policy"
                 android:gravity="center"
+                android:textColorLink="#0C30FF"
                 android:textSize="20sp"
                 android:textColor="#000000"
                 android:background="#FCB283"
-                android:layout_marginBottom="12dp"/>
+                android:layout_marginBottom="12dp"/> <!-- TODO: Link Privacy Policy -->
 
         </LinearLayout>
     </ScrollView>

@@ -1,6 +1,7 @@
 package app.shivank.showzap.wallpapershd;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -125,8 +126,10 @@ public class WallInfo extends AppCompatActivity {
                     String text = "<a href='" + txtArtSourceString + "'> " + txtArtSourceString + " </a>";
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         txtSource.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT));
+                        txtSource.setLinkTextColor(Color.parseColor("#506BFF"));
                     } else {
                         txtSource.setText(Html.fromHtml(text));
+                        txtSource.setLinkTextColor(Color.parseColor("#506BFF"));
                     }
                 } else {
                     txtSource.setText("N/A");

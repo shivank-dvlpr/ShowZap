@@ -44,6 +44,5 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'android.arch.work:work-runtime:1.0.1'
     implementation "com.airbnb.android:lottie:3.0.6"
-    implementation 'de.hdodenhof:circleimageview:3.0.0'
 
 }

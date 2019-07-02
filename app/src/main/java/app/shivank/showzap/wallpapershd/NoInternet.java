@@ -145,7 +145,8 @@ public class NoInternet extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (MainActivity.checkInternetConnection(NoInternet.this)) {
-            Snackbar.make(no_internet_rel, "Internet Connected Restart your App.", Snackbar.LENGTH_LONG).show();
+            startActivity(new Intent(NoInternet.this, MainActivity.class));
+            finish();
             active = false;
         }
     }

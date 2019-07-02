@@ -1,12 +1,14 @@
 package app.shivank.showzap.wallpapershd;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -24,9 +26,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -82,6 +87,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     TextView txtNoFav;
     static String txtName, txtArt, txtWebsite;
     String childKey;
+    private final int PROFILE_CODE = 77;
 
     int l;
 
@@ -112,20 +118,47 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             @Override
             public void onClick(View v) {
 
-                String[] items = {"Choose Image"};
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                dialog.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                            && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                PROFILE_CODE);
 
-                        if (which == 0) {
-                            Intent intent = new Intent();
-                            intent.setType("image/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-                        }
+
+                    }else {
+                        String[] items = {"Choose Image"};
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                        dialog.setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                if (which == 0) {
+                                    Intent intent = new Intent();
+                                    intent.setType("image/*");
+                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                                }
+                            }
+                        }).create().show();
                     }
-                }).create().show();
+
+                }else {
+                    String[] items = {"Choose Image"};
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                    dialog.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            if (which == 0) {
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                            }
+                        }
+                    }).create().show();
+                }
+
             }
         });
 
@@ -154,7 +187,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             Uri uri = Uri.parse(getAvatar);
             Glide.with(getContext())
                     .load(uri)
-                    .apply(RequestOptions.circleCropTransform())//TODO:- set Placeholder of your app icon
+                    .apply(RequestOptions.circleCropTransform())
+                    .placeholder(R.drawable.logo)
                     .into(navHeaderImage);
         }
 
@@ -162,6 +196,33 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         return ReturnView();
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PROFILE_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                String[] items = {"Choose Image"};
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                dialog.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (which == 0) {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                        }
+                    }
+                }).create().show();
+            } else {
+                FancyToast.makeText(getContext(), "Permission Denied", FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
+            }
+        }
+    }
+
 
 
     @Override
@@ -172,7 +233,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             avatarData = data.getData();
             Glide.with(getContext())
                     .load(avatarData)
-                    .apply(RequestOptions.circleCropTransform())//TODO:- set Placeholder of your app icon
+                    .apply(RequestOptions.circleCropTransform())
+                    .placeholder(R.drawable.logo)
                     .into(navHeaderImage);
 
             sharedPreferences = getActivity().getSharedPreferences("AVATAR", 0);
@@ -1420,4 +1482,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         }
 
     }
+
+
 }
