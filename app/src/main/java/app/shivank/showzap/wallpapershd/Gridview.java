@@ -81,6 +81,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     private int CAMERA_REQUEST = 2000;
     private int PICK_IMAGE = 111;
     Uri avatarData;
+    LinearLayout newWallLayout;
     SharedPreferences sharedPreferences;
     SharedPreferences sharedPreferences1;
     int code;
@@ -110,7 +111,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         txtNoFav = (TextView) view.findViewById(R.id.txtNoFav);
 
-
+        newWallLayout = (LinearLayout) view.findViewById(R.id.newWallLayout);
+        newWallLayout.setVisibility(View.GONE);
 
         navigatin_drawer_header = MainActivity.navigationView.getHeaderView(0);
         navHeaderImage = navigatin_drawer_header.findViewById(R.id.nav_header_image);
@@ -125,7 +127,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                                 PROFILE_CODE);
 
 
-                    }else {
+                    } else {
                         String[] items = {"Choose Image"};
                         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                         dialog.setItems(items, new DialogInterface.OnClickListener() {
@@ -142,7 +144,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                         }).create().show();
                     }
 
-                }else {
+                } else {
                     String[] items = {"Choose Image"};
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                     dialog.setItems(items, new DialogInterface.OnClickListener() {
@@ -224,7 +226,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
@@ -280,11 +281,13 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             gridView.smoothScrollToPosition(View.FOCUS_DOWN);
             fabDown.setVisibility(View.GONE);
             fabUp.setVisibility(View.GONE);
+            newWallLayout.setVisibility(View.GONE);
         }
         if (v.getId() == R.id.fab_scroll_up) {
             gridView.smoothScrollToPosition(0);
             fabUp.setVisibility(View.GONE);
             fabDown.setVisibility(View.GONE);
+            newWallLayout.setVisibility(View.GONE);
         }
 
     }
@@ -470,8 +473,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                     }*/
 
 
-
-
                     value = dataSnapshot.getValue(String.class);
                     list.add(value);
 
@@ -547,13 +548,22 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
+                    if (MainActivity.DRAWER_VALUES == 2){
+                        if (dataSnapshot.getValue().equals("Adding")){
+                            newWallLayout.setVisibility(View.VISIBLE);
+                            Log.d("ADDED", dataSnapshot.getValue() + "");
+                            databaseReference.child("Categories").child("Animals").child("Animal").setValue("NoAdding");
+                        }else if (dataSnapshot.getValue().equals("NoAdding")){
+                            databaseReference.child("Categories").child("Animals").child("Animal").removeValue();
+                        }else {
+                            value = dataSnapshot.getValue(String.class);
+                            list.add(value);
+                        }
+                        gridAdapter = new GridAdapter(getContext(), list);
+                        gridAdapter.notifyDataSetChanged();
+                        gridView.setAdapter(gridAdapter);
 
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
+                    }
 
                 }
 
@@ -577,7 +587,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
                 }
             });
-
 
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -1482,6 +1491,5 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         }
 
     }
-
 
 }
