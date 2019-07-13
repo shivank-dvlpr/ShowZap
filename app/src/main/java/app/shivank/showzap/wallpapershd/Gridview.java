@@ -268,6 +268,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         if (scrollDetect > firstVisibleItem) {
             fabDown.setVisibility(View.GONE);
             fabUp.setVisibility(View.VISIBLE);
+            newWallLayout.setVisibility(View.GONE);
         }
         scrollDetect = firstVisibleItem;
 
@@ -369,15 +370,26 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             list = new ArrayList<String>();
 
             databaseReference.child("HomeActivity").addChildEventListener(new ChildEventListener() {
+                @SuppressLint("RestrictedApi")
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
+                    if (MainActivity.DRAWER_VALUES == 0){
+                        if (dataSnapshot.getValue().equals("Added")){
+                            newWallLayout.setVisibility(View.VISIBLE);
+                            fabDown.setVisibility(View.VISIBLE);
+                            databaseReference.child("HomeActivity").child("HomeActivity").setValue("NotAdding");
+                        }else if (dataSnapshot.getValue().equals("NotAdding")){
+                            databaseReference.child("HomeActivity").child("HomeActivity").removeValue();
+                        }else {
+                            value = dataSnapshot.getValue(String.class);
+                            list.add(value);
+                        }
+                        gridAdapter = new GridAdapter(getContext(), list);
+                        gridAdapter.notifyDataSetChanged();
+                        gridView.setAdapter(gridAdapter);
+                    }
 
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
 
 
                 }
@@ -481,16 +493,26 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             list = new ArrayList<String>();
 
             databaseReference.child("Trend").addChildEventListener(new ChildEventListener() {
+                @SuppressLint("RestrictedApi")
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
 
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
+                    if (MainActivity.DRAWER_VALUES == 12){
+                        if (dataSnapshot.getValue().equals("Added")){
+                            newWallLayout.setVisibility(View.VISIBLE);
+                            fabDown.setVisibility(View.VISIBLE);
+                            databaseReference.child("Trend").child("Trend").setValue("NotAdding");
+                        }else if (dataSnapshot.getValue().equals("NotAdding")){
+                            databaseReference.child("Trend").child("Trend").removeValue();
+                        }else {
+                            value = dataSnapshot.getValue(String.class);
+                            list.add(value);
+                        }
+                        gridAdapter = new GridAdapter(getContext(), list);
+                        gridAdapter.notifyDataSetChanged();
+                        gridView.setAdapter(gridAdapter);
+                    }
 
                 }
 
@@ -723,12 +745,14 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         list = new ArrayList<String>();
 
         databaseReference.child("Categories").child(cTitle).addChildEventListener(new ChildEventListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                 if (MainActivity.DRAWER_VALUES == drawValue){
                     if (dataSnapshot.getValue().equals("Added")){
                         newWallLayout.setVisibility(View.VISIBLE);
+                        fabDown.setVisibility(View.VISIBLE);
                         databaseReference.child("Categories").child(cTitle).child(cTitle).setValue("NotAdding");
                     }else if (dataSnapshot.getValue().equals("NotAdding")){
                         databaseReference.child("Categories").child(cTitle).child(cTitle).removeValue();
