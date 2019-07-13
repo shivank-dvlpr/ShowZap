@@ -419,845 +419,50 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             });
 
         } else if (MainActivity.DRAWER_VALUES == 1) {
-
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Abstract");
-
-            changeUIColors("#34515e", "#8eacbb", "#000000", "#000000"
-                    , "#8eacbb", "#8eacbb", R.drawable.ic_up, R.drawable.ic_down, "#34515e");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Abstract").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-/*
-                    l++;
-
-                    childKey = databaseReference.child("Categories").child("Abstract").child(String.valueOf(l)).getKey();
-
-
-
-
-
-                    if (childKey.equals("1")){
-                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child("1").child("Art").setValue("Shivank");
-                        databaseReference.child("WallInfo").child("Categories").child("Abstract").child("1").child("Art").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                txtName = dataSnapshot.getValue(String.class);
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }*/
-
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
-
+            allCategoriesData("Abstract",1,"#34515e","#8eacbb",
+                    "#000000",R.drawable.ic_up,R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 2) {
-
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-
-            MainActivity.toolbar.setTitle("Animals");
-            changeUIColors("#005cb2", "#6ab7ff", "#000000", "#000000"
-                    , "#6ab7ff", "#6ab7ff", R.drawable.ic_up, R.drawable.ic_down, "#005cb2");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Animals").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    if (MainActivity.DRAWER_VALUES == 2){
-                        if (dataSnapshot.getValue().equals("Adding")){
-                            newWallLayout.setVisibility(View.VISIBLE);
-                            Log.d("ADDED", dataSnapshot.getValue() + "");
-                            databaseReference.child("Categories").child("Animals").child("Animal").setValue("NoAdding");
-                        }else if (dataSnapshot.getValue().equals("NoAdding")){
-                            databaseReference.child("Categories").child("Animals").child("Animal").removeValue();
-                        }else {
-                            value = dataSnapshot.getValue(String.class);
-                            list.add(value);
-                        }
-                        gridAdapter = new GridAdapter(getContext(), list);
-                        gridAdapter.notifyDataSetChanged();
-                        gridView.setAdapter(gridAdapter);
-
-                    }
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
+            allCategoriesData("Animals", 2,"#005cb2", "#6ab7ff",
+                    "#000000",R.drawable.ic_up,R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 3) {
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Automotive");
-            changeUIColors("#4f9a94", "#b2fef7", "#000000", "#000000"
-                    , "#b2fef7", "#b2fef7", R.drawable.ic_up, R.drawable.ic_down, "#4f9a94");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Automotive").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
+            allCategoriesData("Automotive",3,"#4f9a94","#b2fef7",
+                    "#000000", R.drawable.ic_up,R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 4) {
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
+            allCategoriesData("Cities",4,"#c77800","#ffbd45",
+                    "#000000",R.drawable.ic_up, R.drawable.ic_down);
 
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Cities");
-            //#c25e00 sb
-            changeUIColors("#c77800", "#ffbd45", "#000000", "#000000"
-                    , "#ffbd45", "#ffbd45", R.drawable.ic_up, R.drawable.ic_down, "#c77800");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Cities").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
         } else if (MainActivity.DRAWER_VALUES == 5) {
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Games");
-            changeUIColors("#4d2c91", "#b085f5", "#FFFFFF", "#FFFFFF"
-                    , "#b085f5", "#b085f5", R.drawable.ic_up_white, R.drawable.ic_down_white, "#4d2c91");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Games").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
+            allCategoriesData("Games",5,"#4d2c91","#b085f5",
+                    "#FFFFFF",R.drawable.ic_up_white,R.drawable.ic_down_white);
 
         } else if (MainActivity.DRAWER_VALUES == 6) {
-
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Graphics");
-            changeUIColors("#9a0007", "#ff6659", "#FFFFFF", "#FFFFFF"
-                    , "#ff6659", "#ff6659", R.drawable.ic_up_white, R.drawable.ic_down_white, "#9a0007");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Graphics").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
+            allCategoriesData("Graphics",6,"#9a0007","#ff6659",
+                    "#FFFFFF",R.drawable.ic_up_white,R.drawable.ic_down_white);
 
         } else if (MainActivity.DRAWER_VALUES == 7) {
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Minimal");
-            changeUIColors("#bb002f", "#ff5983", "#FFFFFF", "#FFFFFF"
-                    , "#ff5983", "#ff5983", R.drawable.ic_up_white, R.drawable.ic_down_white, "#bb002f");
-            //changeUIColors("#5c007a", "#c158dc", "#000000", "#000000");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Minimalist").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
+            allCategoriesData("Minimalist",7,"#bb002f","#ff5983",
+                    "#FFFFFF",R.drawable.ic_up_white,R.drawable.ic_down_white);
 
         } else if (MainActivity.DRAWER_VALUES == 8) {
-
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Movies");
-            changeUIColors("#0088a3", "#62ebff", "#000000", "#000000"
-                    , "#62ebff", "#62ebff", R.drawable.ic_up, R.drawable.ic_down, "#0088a3");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Movies").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
+            allCategoriesData("Movies",8,"#0088a3","#62ebff",
+                    "#000000", R.drawable.ic_up,R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 9) {
-
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Nature");
-            changeUIColors("#387002", "#99d066", "#000000", "#000000"
-                    , "#99d066", "#99d066", R.drawable.ic_up, R.drawable.ic_down, "#387002");
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Nature").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
+            allCategoriesData("Nature",9,"#387002","#99d066",
+                    "#000000", R.drawable.ic_up,R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 10) {
-
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Quotes");
-            changeUIColors("#af4448", "#ffa4a2", "#000000", "#000000"
-                    , "#ffa4a2", "#ffa4a2", R.drawable.ic_up, R.drawable.ic_down, "#af4448");
-
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Quotes").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
+            allCategoriesData("Quotes",10,"#af4448","#ffa4a2",
+                    "#000000", R.drawable.ic_up, R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 11) {
+            allCategoriesData("Technology",11,"#1b1b1b","#6d6d6d",
+                    "#FFFFFF",R.drawable.ic_up_white,R.drawable.ic_down_white );
 
-            MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
-
-            bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
-
-            //MainActivity mainActivity = new MainActivity();
-            MainActivity.toolbar.setTitle("Technology");
-            changeUIColors("#1b1b1b", "#6d6d6d", "#FFFFFF", "#FFFFFF"
-                    , "#6d6d6d", "#6d6d6d", R.drawable.ic_up_white, R.drawable.ic_down_white, "#1b1b1b");
-
-
-            firebaseStorage = FirebaseStorage.getInstance();
-
-            storageReference = firebaseStorage.getReference();
-
-            ref = storageReference;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
-
-            list = new ArrayList<String>();
-
-            databaseReference.child("Categories").child("Technology").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    value = dataSnapshot.getValue(String.class);
-                    list.add(value);
-
-                    gridAdapter = new GridAdapter(getContext(), list);
-                    gridAdapter.notifyDataSetChanged();
-                    gridView.setAdapter(gridAdapter);
-
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent intent = new Intent(getActivity(), ImageShow.class);
-
-                    for (String i : list) {
-                        model = new Model(list.get(position));
-                        intent.putExtra("KEY", model.strings);
-                    }
-                    startActivity(intent);
-                }
-            });
-
-        } else if (MainActivity.DRAWER_VALUES == 12) { // Trend
-
-            //MainActivity mainActivity = new MainActivity();
+        } else if (MainActivity.DRAWER_VALUES == 12) {
             MainActivity.toolbar.setTitle("Trend");
            /* changeUIColors("#000000", "#000000", "#b0ff57", "#b0ff57"
                     , "#000000", "#000000", R.drawable.ic_up_green, R.drawable.ic_down_green, "#000000");*/
@@ -1490,6 +695,89 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             }
         }
 
+    }
+
+    private void allCategoriesData(String cTitle, int drawValue, String statusBarNavHColor,String toolbarFabColor,String toolbarTextHamburgerCol
+    ,int fabUpRes, int fabDownRes) {
+
+        MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
+
+        bottomNavigationView.getMenu().setGroupCheckable(0, false, true); // Done
+
+        //MainActivity mainActivity = new MainActivity();
+
+        MainActivity.toolbar.setTitle(cTitle);
+        changeUIColors(statusBarNavHColor, toolbarFabColor, toolbarTextHamburgerCol, toolbarTextHamburgerCol
+                , toolbarFabColor, toolbarFabColor, fabUpRes, fabDownRes, statusBarNavHColor);
+
+        firebaseStorage = FirebaseStorage.getInstance();
+
+        storageReference = firebaseStorage.getReference();
+
+        ref = storageReference;
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        // GridAdapter gridAdapter = new GridAdapter(getActivity(), icon);
+
+        list = new ArrayList<String>();
+
+        databaseReference.child("Categories").child(cTitle).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                if (MainActivity.DRAWER_VALUES == drawValue){
+                    if (dataSnapshot.getValue().equals("Added")){
+                        newWallLayout.setVisibility(View.VISIBLE);
+                        databaseReference.child("Categories").child(cTitle).child(cTitle).setValue("NotAdding");
+                    }else if (dataSnapshot.getValue().equals("NotAdding")){
+                        databaseReference.child("Categories").child(cTitle).child(cTitle).removeValue();
+                    }else {
+                        value = dataSnapshot.getValue(String.class);
+                        list.add(value);
+                    }
+                    gridAdapter = new GridAdapter(getContext(), list);
+                    gridAdapter.notifyDataSetChanged();
+                    gridView.setAdapter(gridAdapter);
+
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(getActivity(), ImageShow.class);
+
+                for (String i : list) {
+                    model = new Model(list.get(position));
+                    intent.putExtra("KEY", model.strings);
+                }
+                startActivity(intent);
+            }
+        });
     }
 
 }
