@@ -8,7 +8,9 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.core.view.GravityCompat;
@@ -17,12 +19,16 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static Window window;
     static ActionBarDrawerToggle toggle;
     static boolean active = false;
+    static MenuItem newItemView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         img11 = findViewById(R.id.img11);
 
-        if (!checkInternetConnection(this)){
+        if (!checkInternetConnection(this)) {
             startActivity(new Intent(this, NoInternet.class));
             finish();
         }
@@ -144,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, "ShowZap 4k,HD Wallpapers");
-                shareIntent.putExtra(Intent.EXTRA_TEXT,  "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
                 startActivity(Intent.createChooser(shareIntent, "Share Using"));
                 break;
 
@@ -184,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         intent.setType("text/plain");
                         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"appmania0011@gmail.com"});
                         intent.putExtra(Intent.EXTRA_SUBJECT, "Owner of Wallpaper Query");
-                        intent.putExtra(Intent.EXTRA_TEXT, "Your Name - \n\n" +"Website or (Where i can see your Original Art) - \n\n" +"Your Query -");
+                        intent.putExtra(Intent.EXTRA_TEXT, "Your Name - \n\n" + "Website or (Where i can see your Original Art) - \n\n" + "Your Query -");
                         intent.setPackage("com.google.android.gm");
                         if (intent.resolveActivity(getPackageManager()) != null) {
                             startActivity(intent);
@@ -213,17 +220,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public static boolean checkInternetConnection(Context context){
+    public static boolean checkInternetConnection(Context context) {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = null;
         if (connectivityManager != null) {
             networkInfo = connectivityManager.getActiveNetworkInfo();
         }
-        if (networkInfo != null){
+        if (networkInfo != null) {
             networkInfo.isConnected();
             return true;
-        }else {
+        } else {
             return false;
         }
     }

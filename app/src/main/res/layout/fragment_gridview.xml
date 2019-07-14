@@ -39,19 +39,24 @@
     android:layout_alignParentRight="true"
     android:layout_marginRight="10dp"
     android:layout_marginTop="20dp"
+    android:gravity="center"
     android:orientation="vertical"
-    android:weightSum="10">
+    android:weightSum="10"
+    android:layout_alignParentEnd="true"
+    android:layout_marginEnd="10dp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/txtNewMsg"
+        android:layout_width="50dp"
+        android:gravity="center"
         android:layout_height="0dp"
-        android:layout_weight="5"
+       android:layout_weight="5"
         android:text="New"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:padding="5dp"
-        android:background="#FFFFFF" />
+        android:background="@drawable/bg_new" />
     <ImageView
+        android:id="@+id/imgDropNew"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="5"

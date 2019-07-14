@@ -5,6 +5,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,11 +30,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -43,7 +46,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.shashank.sony.fancytoastlib.FancyToast;
@@ -71,7 +73,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     FloatingActionButton fabDown, fabUp;
     int scrollDetect;
     View navigatin_drawer_header;
-    ImageView navHeaderImage;
+    ImageView navHeaderImage, imgDropNew;
     Bundle savedState;
     String favData;
     ArrayList<String> fav = new ArrayList<>();
@@ -85,7 +87,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     SharedPreferences sharedPreferences;
     SharedPreferences sharedPreferences1;
     int code;
-    TextView txtNoFav;
+    TextView txtNoFav,txtNewMsg;
     static String txtName, txtArt, txtWebsite;
     String childKey;
     private final int PROFILE_CODE = 77;
@@ -110,6 +112,11 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         navHeaderImage = v.findViewById(R.id.nav_header_image);
 
         txtNoFav = (TextView) view.findViewById(R.id.txtNoFav);
+
+        txtNewMsg = view.findViewById(R.id.txtNewMsg);
+        imgDropNew = view.findViewById(R.id.imgDropNew);
+
+        txtNewMsg.setOnClickListener(v1 -> FancyToast.makeText(getContext(),"Go to Bottom for New Wallpapers", FancyToast.LENGTH_LONG, FancyToast.INFO,false).show());
 
         newWallLayout = (LinearLayout) view.findViewById(R.id.newWallLayout);
         newWallLayout.setVisibility(View.GONE);
@@ -181,6 +188,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.keepSynced(true);
 
+        checkNewWallAdded();
 
         sharedPreferences = getActivity().getSharedPreferences("AVATAR", 0);
         String getAvatar = sharedPreferences.getString("image", null);
@@ -304,6 +312,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 MainActivity.DRAWER_VALUES = 0;
                 fabDown.setVisibility(View.INVISIBLE);
                 fabUp.setVisibility(View.INVISIBLE);
+                newWallLayout.setVisibility(View.GONE);
                 try {
                     (MainActivity.navigationView.getCheckedItem()).setChecked(false);
                 } catch (NullPointerException e) {
@@ -319,6 +328,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 MainActivity.DRAWER_VALUES = 12;
                 fabDown.setVisibility(View.INVISIBLE);
                 fabUp.setVisibility(View.INVISIBLE);
+                newWallLayout.setVisibility(View.GONE);
                 try {
                     (MainActivity.navigationView.getCheckedItem()).setChecked(false);
                 } catch (NullPointerException e) {
@@ -374,14 +384,14 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    if (MainActivity.DRAWER_VALUES == 0){
-                        if (dataSnapshot.getValue().equals("Added")){
+                    if (MainActivity.DRAWER_VALUES == 0) {
+                        if (dataSnapshot.getValue().equals("Added")) {
                             newWallLayout.setVisibility(View.VISIBLE);
                             fabDown.setVisibility(View.VISIBLE);
                             databaseReference.child("HomeActivity").child("HomeActivity").setValue("NotAdding");
-                        }else if (dataSnapshot.getValue().equals("NotAdding")){
+                        } else if (dataSnapshot.getValue().equals("NotAdding")) {
                             databaseReference.child("HomeActivity").child("HomeActivity").removeValue();
-                        }else {
+                        } else {
                             value = dataSnapshot.getValue(String.class);
                             list.add(value);
                         }
@@ -389,7 +399,6 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                         gridAdapter.notifyDataSetChanged();
                         gridView.setAdapter(gridAdapter);
                     }
-
 
 
                 }
@@ -431,48 +440,48 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             });
 
         } else if (MainActivity.DRAWER_VALUES == 1) {
-            allCategoriesData("Abstract",1,"#34515e","#8eacbb",
-                    "#000000",R.drawable.ic_up,R.drawable.ic_down);
+            allCategoriesData("Abstract", 1, "#34515e", "#8eacbb",
+                    "#000000", R.drawable.ic_up, R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 2) {
-            allCategoriesData("Animals", 2,"#005cb2", "#6ab7ff",
-                    "#000000",R.drawable.ic_up,R.drawable.ic_down);
+            allCategoriesData("Animals", 2, "#005cb2", "#6ab7ff",
+                    "#000000", R.drawable.ic_up, R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 3) {
-            allCategoriesData("Automotive",3,"#4f9a94","#b2fef7",
-                    "#000000", R.drawable.ic_up,R.drawable.ic_down);
+            allCategoriesData("Automotive", 3, "#4f9a94", "#b2fef7",
+                    "#000000", R.drawable.ic_up, R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 4) {
-            allCategoriesData("Cities",4,"#c77800","#ffbd45",
-                    "#000000",R.drawable.ic_up, R.drawable.ic_down);
+            allCategoriesData("Cities", 4, "#c77800", "#ffbd45",
+                    "#000000", R.drawable.ic_up, R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 5) {
-            allCategoriesData("Games",5,"#4d2c91","#b085f5",
-                    "#FFFFFF",R.drawable.ic_up_white,R.drawable.ic_down_white);
+            allCategoriesData("Games", 5, "#4d2c91", "#b085f5",
+                    "#FFFFFF", R.drawable.ic_up_white, R.drawable.ic_down_white);
 
         } else if (MainActivity.DRAWER_VALUES == 6) {
-            allCategoriesData("Graphics",6,"#9a0007","#ff6659",
-                    "#FFFFFF",R.drawable.ic_up_white,R.drawable.ic_down_white);
+            allCategoriesData("Graphics", 6, "#9a0007", "#ff6659",
+                    "#FFFFFF", R.drawable.ic_up_white, R.drawable.ic_down_white);
 
         } else if (MainActivity.DRAWER_VALUES == 7) {
-            allCategoriesData("Minimalist",7,"#bb002f","#ff5983",
-                    "#FFFFFF",R.drawable.ic_up_white,R.drawable.ic_down_white);
+            allCategoriesData("Minimalist", 7, "#bb002f", "#ff5983",
+                    "#FFFFFF", R.drawable.ic_up_white, R.drawable.ic_down_white);
 
         } else if (MainActivity.DRAWER_VALUES == 8) {
-            allCategoriesData("Movies",8,"#0088a3","#62ebff",
-                    "#000000", R.drawable.ic_up,R.drawable.ic_down);
+            allCategoriesData("Movies", 8, "#0088a3", "#62ebff",
+                    "#000000", R.drawable.ic_up, R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 9) {
-            allCategoriesData("Nature",9,"#387002","#99d066",
-                    "#000000", R.drawable.ic_up,R.drawable.ic_down);
+            allCategoriesData("Nature", 9, "#387002", "#99d066",
+                    "#000000", R.drawable.ic_up, R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 10) {
-            allCategoriesData("Quotes",10,"#af4448","#ffa4a2",
+            allCategoriesData("Quotes", 10, "#af4448", "#ffa4a2",
                     "#000000", R.drawable.ic_up, R.drawable.ic_down);
 
         } else if (MainActivity.DRAWER_VALUES == 11) {
-            allCategoriesData("Technology",11,"#1b1b1b","#6d6d6d",
-                    "#FFFFFF",R.drawable.ic_up_white,R.drawable.ic_down_white );
+            allCategoriesData("Technology", 11, "#1b1b1b", "#6d6d6d",
+                    "#FFFFFF", R.drawable.ic_up_white, R.drawable.ic_down_white);
 
         } else if (MainActivity.DRAWER_VALUES == 12) {
             MainActivity.toolbar.setTitle("Trend");
@@ -498,14 +507,14 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
 
-                    if (MainActivity.DRAWER_VALUES == 12){
-                        if (dataSnapshot.getValue().equals("Added")){
+                    if (MainActivity.DRAWER_VALUES == 12) {
+                        if (dataSnapshot.getValue().equals("Added")) {
                             newWallLayout.setVisibility(View.VISIBLE);
                             fabDown.setVisibility(View.VISIBLE);
                             databaseReference.child("Trend").child("Trend").setValue("NotAdding");
-                        }else if (dataSnapshot.getValue().equals("NotAdding")){
+                        } else if (dataSnapshot.getValue().equals("NotAdding")) {
                             databaseReference.child("Trend").child("Trend").removeValue();
-                        }else {
+                        } else {
                             value = dataSnapshot.getValue(String.class);
                             list.add(value);
                         }
@@ -653,6 +662,9 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
         setNavDrawerItemIconColors(Color.GREEN, "#FFFFFF");
 
+        txtNewMsg.setBackgroundColor(Color.parseColor(toolbarColor));
+        txtNewMsg.setTextColor(Color.parseColor(toolbarTextColor));
+
     }
 
     public void setNavDrawerItemIconColors(int color, String dfColor) {
@@ -719,8 +731,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
 
     }
 
-    private void allCategoriesData(String cTitle, int drawValue, String statusBarNavHColor,String toolbarFabColor,String toolbarTextHamburgerCol
-    ,int fabUpRes, int fabDownRes) {
+    private void allCategoriesData(String cTitle, int drawValue, String statusBarNavHColor, String toolbarFabColor, String toolbarTextHamburgerCol
+            , int fabUpRes, int fabDownRes) {
 
         MainActivity.navigationView.getCheckedItem().setChecked(true); // Done
 
@@ -749,14 +761,16 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                if (MainActivity.DRAWER_VALUES == drawValue){
-                    if (dataSnapshot.getValue().equals("Added")){
+
+                if (MainActivity.DRAWER_VALUES == drawValue) {
+                    if (dataSnapshot.getValue().equals("Added")) {
                         newWallLayout.setVisibility(View.VISIBLE);
                         fabDown.setVisibility(View.VISIBLE);
                         databaseReference.child("Categories").child(cTitle).child(cTitle).setValue("NotAdding");
-                    }else if (dataSnapshot.getValue().equals("NotAdding")){
+                        removeNewMessageFromNavView();
+                    } else if (dataSnapshot.getValue().equals("NotAdding")) {
                         databaseReference.child("Categories").child(cTitle).child(cTitle).removeValue();
-                    }else {
+                    } else {
                         value = dataSnapshot.getValue(String.class);
                         list.add(value);
                     }
@@ -802,6 +816,117 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
                 startActivity(intent);
             }
         });
+    }
+
+    private void checkNewWallAdded() {
+        databaseReference.child("Categories").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                try {
+                    for (DataSnapshot ld : dataSnapshot.getChildren()) {
+                        if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Abstract")) {
+                            MainActivity.navigationView.getMenu().getItem(0).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Animals")) {
+                            MainActivity.navigationView.getMenu().getItem(1).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Automotive")) {
+                            MainActivity.navigationView.getMenu().getItem(2).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Cities")) {
+                            MainActivity.navigationView.getMenu().getItem(3).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Games")) {
+                            MainActivity.navigationView.getMenu().getItem(4).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Graphics")) {
+                            MainActivity.navigationView.getMenu().getItem(5).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Minimalist")) {
+                            MainActivity.navigationView.getMenu().getItem(6).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Movies")) {
+                            MainActivity.navigationView.getMenu().getItem(7).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Nature")) {
+                            MainActivity.navigationView.getMenu().getItem(8).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Quotes")) {
+                            MainActivity.navigationView.getMenu().getItem(9).setActionView(R.layout.new_message);
+
+                        } else if (ld.getValue().equals("Added") && dataSnapshot.getKey().equals("Technology")) {
+                            MainActivity.navigationView.getMenu().getItem(10).setActionView(R.layout.new_message);
+                        }
+                    }
+
+                } catch (NullPointerException e) {
+                    Log.d("CheckNewWallAdd", e.getLocalizedMessage() + "");
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void removeNewMessageFromNavView() {
+        try {
+            if (MainActivity.DRAWER_VALUES == 1) {
+                MainActivity.navigationView.getMenu().getItem(0).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 2) {
+                MainActivity.navigationView.getMenu().getItem(1).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 3) {
+                MainActivity.navigationView.getMenu().getItem(2).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 4) {
+                MainActivity.navigationView.getMenu().getItem(3).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 5) {
+                MainActivity.navigationView.getMenu().getItem(4).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 6) {
+                MainActivity.navigationView.getMenu().getItem(5).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 7) {
+                MainActivity.navigationView.getMenu().getItem(6).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 8) {
+                MainActivity.navigationView.getMenu().getItem(7).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 9) {
+                MainActivity.navigationView.getMenu().getItem(8).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 10) {
+                MainActivity.navigationView.getMenu().getItem(9).getActionView().setVisibility(View.GONE);
+
+            } else if (MainActivity.DRAWER_VALUES == 11) {
+                MainActivity.navigationView.getMenu().getItem(10).getActionView().setVisibility(View.GONE);
+            }
+
+        } catch (NullPointerException e) {
+            Log.d("NullPointerE", e.getLocalizedMessage() + "");
+        }
     }
 
 }
