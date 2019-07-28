@@ -20,8 +20,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -30,11 +32,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -87,7 +92,8 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     SharedPreferences sharedPreferences;
     SharedPreferences sharedPreferences1;
     int code;
-    TextView txtNoFav,txtNewMsg;
+    TextView  txtNewMsg;
+    TextView txtNoFav;
     static String txtName, txtArt, txtWebsite;
     String childKey;
     private final int PROFILE_CODE = 77;
@@ -116,7 +122,7 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
         txtNewMsg = view.findViewById(R.id.txtNewMsg);
         imgDropNew = view.findViewById(R.id.imgDropNew);
 
-        txtNewMsg.setOnClickListener(v1 -> FancyToast.makeText(getContext(),"Go to Bottom for New Wallpapers", FancyToast.LENGTH_LONG, FancyToast.INFO,false).show());
+        txtNewMsg.setOnClickListener(v1 -> FancyToast.makeText(getContext(), "Go to Bottom for New Wallpapers", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show());
 
         newWallLayout = (LinearLayout) view.findViewById(R.id.newWallLayout);
         newWallLayout.setVisibility(View.GONE);
@@ -715,11 +721,17 @@ public class Gridview extends Fragment implements BottomNavigationView.OnNavigat
     @Override
     public void onResume() {
         super.onResume();
+        MenuItem homeSelected = bottomNavigationView.getMenu().getItem(0);
+        MenuItem trendSelected = bottomNavigationView.getMenu().getItem(1);
         if (MainActivity.DRAWER_VALUES == 50) {
             if (getResult().size() <= 0) {
                 txtNoFav.setText(R.string.emty_fav_text);
                 txtNoFav.setTextColor(Color.WHITE);
                 txtNoFav.setVisibility(View.VISIBLE);
+            }
+            if (homeSelected.isChecked() || trendSelected.isChecked()){
+                txtNoFav.setText("");
+                txtNoFav.setVisibility(View.GONE);
             }
             MenuItem m = bottomNavigationView.getMenu().getItem(2);
             if (m.isChecked()) {

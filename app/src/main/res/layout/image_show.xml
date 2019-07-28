@@ -4,25 +4,25 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_rel"
     android:layout_width="match_parent"
-    android:background="#000000"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000">
 
     <ImageView
         android:id="@+id/img11"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/floating_action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="11dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="19dp"
+        android:layout_marginBottom="11dp"
         fab:menu_animationDelayPerItem="55"
         fab:menu_backgroundColor="@android:color/transparent"
         fab:menu_buttonSpacing="0dp"
@@ -58,8 +58,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_download"
-            fab:fab_colorNormal="#FFEA00"
             app:fab_colorPressed="#76FF03"
+            fab:fab_colorNormal="#FFEA00"
             fab:fab_label="Download"
             fab:fab_size="mini" />
 
@@ -67,9 +67,9 @@
             android:id="@+id/fab_set_wallpaper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="#FFEA00"
-            app:fab_colorPressed="#76FF03"
             android:src="@drawable/ic_set_wallpaper"
+            app:fab_colorPressed="#76FF03"
+            fab:fab_colorNormal="#FFEA00"
             fab:fab_label="Set Wallpaper"
             fab:fab_size="mini" />
 
@@ -77,8 +77,8 @@
             android:id="@+id/fab_fav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_colorPressed="#76FF03"
             android:src="@drawable/not_fav"
+            app:fab_colorPressed="#76FF03"
             fab:fab_colorNormal="#FFEA00"
             fab:fab_label="Favourite"
             fab:fab_size="mini" />
@@ -87,14 +87,13 @@
             android:id="@+id/fab_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_colorPressed="#76FF03"
             android:src="@drawable/info"
+            app:fab_colorPressed="#76FF03"
             fab:fab_colorNormal="#FFEA00"
             fab:fab_label="Info"
             fab:fab_size="mini" />
 
     </com.github.clans.fab.FloatingActionMenu>
-
 
 
 </RelativeLayout>

@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
@@ -41,64 +42,38 @@ import java.util.ArrayList;
 
 public class ImageShow extends AppCompatActivity implements View.OnClickListener {
 
-    static ImageView img11;
-
     public static int SET;
-
     public static int WALLINFOVALUE;
-
+    static ImageView img11;
     static String txtArt, txtName, txtWebsite;
-
-    LinearLayout homeScreen;
-
     static String sendData;
-
-    String bundle;
-
-    String value;
-
+    static String bundle;
     static GridAdapter gridAdapter;
-
-    Boolean recall;
-
-    DisplayMetrics displayMetrics;
-
-    ArrayList<String> aa;
-
-    int width;
-    int height;
-
+    static CharSequence[] screen;
+    static AlertDialog.Builder builder;
+    static String a;
+    static String name, art, website;
     private static int PERMISSION_CODE = 1000;
     private static int PERMISSION_CODE_SET = 2000;
-
+    LinearLayout homeScreen;
+    String value;
+    Boolean recall;
+    DisplayMetrics displayMetrics;
+    ArrayList<String> aa;
+    int width;
+    int height;
     ArrayAdapter<String> arrayAdapter;
-
-    static CharSequence[] screen;
-
-    static AlertDialog.Builder builder;
-
     ArrayList<String> fav_images;
-
     ArrayList<String> stringArrayList = new ArrayList<>();
-
-    static String a;
-
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fab_download, fab_set_wallpaper, fab_fav;
     FloatingActionButton fab_info;
-
     Intent intent;
-
     boolean enter = true;
-
     int idKey;
-
     DataSnapshot dataSnapshot1;
-
+    GestureDetectorCompat detector;
     DatabaseReference databaseReference;
-
-    static String name, art, website;
-
     ArrayList<String> key;
 
     Intent infoClass;
@@ -129,8 +104,7 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                     Snackbar.make(snackBar, "No Internet Connection!", Snackbar.LENGTH_SHORT).show();
                 }
             }
-        },1000);
-
+        }, 1000);
 
 
         fav_images = new ArrayList<>();
@@ -154,7 +128,6 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
         fab_set_wallpaper.setOnClickListener(this);
         fab_fav.setOnClickListener(this);
         fab_info.setOnClickListener(this);
-
         intent = getIntent();
 
 
@@ -183,7 +156,6 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
                 .into(img11);
 
         WallInfoData();
-
 
     }
 
@@ -419,6 +391,3 @@ public class ImageShow extends AppCompatActivity implements View.OnClickListener
     }
 
 }
-
-
-
