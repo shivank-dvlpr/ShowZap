@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     intent.setPackage("com.android.vending");
                     startActivity(intent);
                 } catch (android.content.ActivityNotFoundException activityNotFoundE) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID));
                     intent.setPackage("com.android.vending");
                     startActivity(intent);
                 }
@@ -179,10 +179,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } else {
                     Toast.makeText(this, "No app can perform this action!", Toast.LENGTH_SHORT).show();
                 }
-                /*Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "appmania0011@gmail.com", null));
-                // For Selection (Email or Gmail)
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback Post for ShowZap");
-                this.startActivity(emailIntent, null);*/
                 break;
 
             case R.id.nav_wall_owner:
