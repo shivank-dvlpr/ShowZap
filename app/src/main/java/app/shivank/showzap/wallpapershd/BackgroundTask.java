@@ -4,9 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -17,6 +21,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,10 +33,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 
 public class BackgroundTask extends AsyncTask<String, ProgressDialog, Bitmap> {
 
@@ -109,12 +117,19 @@ public class BackgroundTask extends AsyncTask<String, ProgressDialog, Bitmap> {
         return bitmap;
     }
 
+
+
     private Uri getImageUri(Bitmap inImage, Context inContext) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
+        String title = System.currentTimeMillis() +".jpg";
+
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(),
-                inImage, "Title", null);
+                inImage, title, null);
+
+
+
 
         return Uri.parse(path);
     }
@@ -124,10 +139,19 @@ public class BackgroundTask extends AsyncTask<String, ProgressDialog, Bitmap> {
 
         if (ImageShow.sendData == "Set_Wallpaper") {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                intent = new Intent(manager.getCropAndSetWallpaperIntent(getImageUri(bitmap, context)));
+               /* intent = new Intent(manager.getCropAndSetWallpaperIntent(getImageUri(bitmap, context)));
                 context.startActivity(intent);
-                Toast.makeText(context, "Adjust Your Wallpaper", Toast.LENGTH_SHORT).show();
-                SetWall.setWallActivity.finish();
+                Toast.makeText(context, "Adjust Your Wallpaper", Toast.LENGTH_SHORT).show();*/
+
+                //TODO: Delete Wallpaper After Applying it
+                Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                intent.setDataAndType(getImageUri(bitmap,context), "image/jpeg");
+                intent.putExtra("mimeType", "image/jpeg");
+                intent.putExtra("set_wallpaper", true);
+                //intent.putExtra(Intent.EXTRA_STREAM, getImageUri(bitmap,context));
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                context.startActivity(intent);
 
             } else {
                 try {
@@ -171,7 +195,7 @@ class Downloadtask extends AsyncTask<String, ProgressDialog, Bitmap> {
 
     File sdcard;
 
-    File directory;
+    File directory, imageDir;
 
     long lengthbmp;
 
@@ -226,7 +250,9 @@ class Downloadtask extends AsyncTask<String, ProgressDialog, Bitmap> {
             bitmap = BitmapFactory.decodeStream(url.openStream());
 
 
-            sdcard = Environment.getExternalStorageDirectory();
+           // imageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+            sdcard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             directory = new File(sdcard.getAbsoluteFile() + "/ShowZap");
             if (!directory.exists()) {
                 directory.mkdir();
@@ -236,12 +262,14 @@ class Downloadtask extends AsyncTask<String, ProgressDialog, Bitmap> {
             File outFile = new File(directory, fileName);
 
             //For Showing Images in Gallery
-            MediaScannerConnection.scanFile(context, new String[]{outFile.getPath()}, new String[]{"image/jpeg"}, null);
+
 
             OutputStream outputStream = new FileOutputStream(outFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
+
+            MediaScannerConnection.scanFile(context, new String[]{outFile.getPath()}, new String[]{"image/jpeg"}, null);
 
         } catch (IOException e) {
             Log.i("DOWNLOAD_TASK", e.getLocalizedMessage());
@@ -266,7 +294,8 @@ class Downloadtask extends AsyncTask<String, ProgressDialog, Bitmap> {
         //((Activity)context).finish();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FancyToast.makeText(context, "Downloaded!  " + directory, FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+            //FancyToast.makeText(context, "Downloaded!  " + directory, FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+            Toast.makeText(context, "Downloaded! " + directory, Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, "Downloaded! " + directory, Toast.LENGTH_LONG).show();
         }
